@@ -54,6 +54,21 @@
 </fieldset>
 
 <fieldset>
+  <legend>{$t('settings.gating')}</legend>
+  <p class="hint">{$t('settings.gatingHint')}</p>
+  <div class="options">
+    {#each [true, false] as on (on)}
+      <button
+        class:on={$settings.lessonGating === on}
+        aria-pressed={$settings.lessonGating === on}
+        data-gating={on}
+        onclick={() => ($settings.lessonGating = on)}>{$t(on ? 'settings.on' : 'settings.off')}</button
+      >
+    {/each}
+  </div>
+</fieldset>
+
+<fieldset>
   <legend>{$t('settings.playback')}</legend>
   <div class="options">
     {#each ['together', 'sequence'] as const as playback (playback)}

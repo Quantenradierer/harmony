@@ -84,6 +84,8 @@ export const de: Messages = {
   'settings.instrument': 'Instrument',
   'settings.reference': 'Referenzton',
   'settings.referenceHint': 'Spielt vor jeder Frage ein C4.',
+  'settings.gating': 'Lektionen sperren',
+  'settings.gatingHint': 'Schaltet eine Lektion erst frei, wenn die vorherige bestanden ist.',
   'settings.on': 'An',
   'settings.off': 'Aus',
   'settings.register': 'Oktave: {module}',

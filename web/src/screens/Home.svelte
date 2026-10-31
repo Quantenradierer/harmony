@@ -1,6 +1,6 @@
 <script lang="ts">
   import { LESSONS, isUnlocked, type ModuleId } from '@harmony/shared';
-  import { progress } from '../stores.ts';
+  import { progress, settings } from '../stores.ts';
   import { t, language } from '../i18n/index.ts';
   import { lessonSummary } from '../lessons.ts';
   import { href } from '../router.ts';
@@ -13,7 +13,7 @@
     <h2>{$t(`module.${module}`)}</h2>
     <ol class="lessons">
       {#each LESSONS[module] as lesson, i (lesson.id)}
-        {@const open = isUnlocked($progress, LESSONS[module], lesson.id)}
+        {@const open = isUnlocked($progress, LESSONS[module], lesson.id, $settings.lessonGating)}
         {@const passed = $progress.passed.includes(lesson.id)}
         <li>
           {#if open}

@@ -49,6 +49,12 @@ describe('lesson gating', () => {
     expect(path.map((l) => isUnlocked(p, path, l.id))).toEqual([true, false, false]);
   });
 
+  it('opens every lesson when gating is off', () => {
+    const p = emptyProgress();
+    expect(path.map((l) => isUnlocked(p, path, l.id, false))).toEqual([true, true, true]);
+    expect(isUnlocked(p, path, 'missing', false)).toBe(false);
+  });
+
   it('unlocks the next lesson once the gate is reached', () => {
     let p = emptyProgress();
     for (let i = 0; i < 19; i++) p = recordLessonResult(p, 'a', true);

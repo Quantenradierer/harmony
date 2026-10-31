@@ -83,6 +83,8 @@ export const en = {
   'settings.instrument': 'Instrument',
   'settings.reference': 'Reference pitch',
   'settings.referenceHint': 'Plays C4 before each question.',
+  'settings.gating': 'Lock lessons',
+  'settings.gatingHint': 'Unlocks a lesson only once the one before it is passed.',
   'settings.on': 'On',
   'settings.off': 'Off',
   'settings.register': 'Octave: {module}',

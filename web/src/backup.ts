@@ -53,6 +53,7 @@ function validSettings(s: unknown): s is Partial<Settings> {
   if (s.referencePitch !== undefined && typeof s.referencePitch !== 'boolean') return false;
   if (s.playback !== undefined && s.playback !== 'together' && s.playback !== 'sequence') return false;
   if (s.instrument !== undefined && typeof s.instrument !== 'string') return false;
+  if (s.lessonGating !== undefined && typeof s.lessonGating !== 'boolean') return false;
   return true;
 }
 

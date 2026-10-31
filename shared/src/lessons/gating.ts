@@ -36,9 +36,12 @@ export function recordLessonResult(
   return { ...progress, lessonHistory: { ...progress.lessonHistory, [lessonId]: history }, passed };
 }
 
-/** A lesson is open if it is first in its path or the one before it was passed. */
-export function isUnlocked(progress: Progress, path: Lesson[], lessonId: string): boolean {
+/**
+ * A lesson is open if it is first in its path or the one before it was passed.
+ * With `gated` off every lesson in the path is open.
+ */
+export function isUnlocked(progress: Progress, path: Lesson[], lessonId: string, gated = true): boolean {
   const i = path.findIndex((l) => l.id === lessonId);
   if (i < 0) return false;
-  return i === 0 || progress.passed.includes(path[i - 1]!.id);
+  return !gated || i === 0 || progress.passed.includes(path[i - 1]!.id);
 }

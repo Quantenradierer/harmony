@@ -43,7 +43,10 @@ test('a correct second try earns half points', async ({ page }) => {
 });
 
 test('reaching 80% over 20 questions unlocks the next lesson', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/#/settings');
+  await page.click('[data-gating="true"]');
+  // Navigate within the app: a full reload could race the IndexedDB write.
+  await page.goto('/#/');
   await expect(page.locator('[data-lesson="notes-2"]')).toHaveClass(/locked/);
   await page.click('[data-lesson="notes-1"]');
   await page.click('button.start');

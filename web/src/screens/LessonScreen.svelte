@@ -26,7 +26,7 @@
   const justUnlocked = $derived(!passedBefore && $progress.passed.includes(id) && nextLesson);
 </script>
 
-{#if lesson && quiz && isUnlocked($progress, path, id)}
+{#if lesson && quiz && isUnlocked($progress, path, id, $settings.lessonGating)}
   <h2>{$t(`module.${lesson.spec.module}`)} · {$t('lesson.title', { n: index + 1 })}</h2>
   <p class="summary">{lessonSummary(lesson, $language)}</p>
   <TheoryCards categories={lesson.introduces ?? []} />

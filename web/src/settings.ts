@@ -9,6 +9,8 @@ export interface Settings {
   playback: Playback;
   /** Id from the instrument registry. */
   instrument: string;
+  /** Lock each lesson until the one before it was passed. */
+  lessonGating: boolean;
 }
 
 export function defaultSettings(): Settings {
@@ -17,6 +19,7 @@ export function defaultSettings(): Settings {
     referencePitch: false,
     registers: { notes: 'medium', intervals: 'medium', chords: 'medium' },
     playback: 'together',
-    instrument: 'synth',
+    instrument: 'piano',
+    lessonGating: false,
   };
 }
