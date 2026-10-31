@@ -38,7 +38,7 @@ export const INSTRUMENTS: InstrumentEntry[] = [
     name: { de: 'Dudelsack', en: 'Bagpipe' },
     samples: {
       baseUrl: 'samples/bagpipe',
-      notes: [67, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79],
+      notes: [65, 67, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79],
       release: 0.15,
     },
   },
