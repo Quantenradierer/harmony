@@ -6,6 +6,7 @@ import {
   type Outcome,
   type Question,
   type Round,
+  type Sound,
 } from '@harmony/shared';
 import type { Player } from '../audio/player.ts';
 
@@ -30,6 +31,8 @@ export interface QuizResult {
 export interface QuizDeps {
   nextQuestion: () => Question;
   player: Player;
+  /** Anchor tone to play before each new question, if enabled. */
+  reference?: () => Sound | undefined;
   /** Called once per finished question, e.g. to persist progress. */
   onResult?: (result: QuizResult) => void;
 }
@@ -48,8 +51,15 @@ export class QuizController {
   }
 
   async next(): Promise<void> {
-    this.update({ round: createRound(this.deps.nextQuestion()), gained: undefined });
-    await this.replay();
+    const round = createRound(this.deps.nextQuestion());
+    this.update({ round, gained: undefined });
+    const reference = this.deps.reference?.();
+    await this.deps.player.play(...(reference ? [reference] : []), round.question.sound);
+  }
+
+  async replayReference(): Promise<void> {
+    const reference = this.deps.reference?.();
+    if (reference) await this.deps.player.play(reference);
   }
 
   /** Replays are free: they never affect the score. */

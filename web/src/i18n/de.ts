@@ -28,6 +28,7 @@ export const de: Messages = {
 
   'quiz.start': 'Start',
   'quiz.replay': 'Nochmal hören',
+  'quiz.reference': 'Referenzton C4',
   'quiz.next': 'Weiter',
   'quiz.tryAgain': 'Nicht ganz – noch ein Versuch.',
   'quiz.correct': 'Richtig!',
@@ -39,6 +40,15 @@ export const de: Messages = {
 
   'settings.title': 'Einstellungen',
   'settings.language': 'Sprache',
+  'settings.reference': 'Referenzton',
+  'settings.referenceHint': 'Spielt vor jeder Frage ein C4.',
+  'settings.on': 'An',
+  'settings.off': 'Aus',
+  'settings.register': 'Oktave: {module}',
+  'register.low': 'Tief',
+  'register.medium': 'Mittel',
+  'register.high': 'Hoch',
+  'register.random': 'Zufällig',
   'language.de': 'Deutsch',
   'language.en': 'English',
 };

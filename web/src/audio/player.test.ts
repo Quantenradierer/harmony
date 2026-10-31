@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Player } from './player.ts';
+import { GAP, Player } from './player.ts';
 import { FakeInstrument } from './fake.ts';
 
 describe('player', () => {
@@ -27,6 +27,6 @@ describe('player', () => {
       { events: [{ midi: 60, time: 0, duration: 1 }] },
       { events: [{ midi: 67, time: 0, duration: 1 }] },
     );
-    expect(inst.played[1]!.when - inst.played[0]!.when).toBeCloseTo(1);
+    expect(inst.played[1]!.when - inst.played[0]!.when).toBeCloseTo(1 + GAP);
   });
 });

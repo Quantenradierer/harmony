@@ -1,7 +1,9 @@
 <script lang="ts">
-  import { LANGUAGES } from '@harmony/shared';
+  import { LANGUAGES, REGISTERS, type ModuleId } from '@harmony/shared';
   import { settings } from '../stores.ts';
   import { t } from '../i18n/index.ts';
+
+  const MODULES: ModuleId[] = ['notes', 'intervals', 'chords'];
 </script>
 
 <h2>{$t('settings.title')}</h2>
@@ -19,3 +21,42 @@
     {/each}
   </div>
 </fieldset>
+
+<fieldset>
+  <legend>{$t('settings.reference')}</legend>
+  <p class="hint">{$t('settings.referenceHint')}</p>
+  <div class="options">
+    {#each [true, false] as on (on)}
+      <button
+        class:on={$settings.referencePitch === on}
+        aria-pressed={$settings.referencePitch === on}
+        data-reference={on}
+        onclick={() => ($settings.referencePitch = on)}>{$t(on ? 'settings.on' : 'settings.off')}</button
+      >
+    {/each}
+  </div>
+</fieldset>
+
+{#each MODULES as module (module)}
+  <fieldset>
+    <legend>{$t('settings.register', { module: $t(`module.${module}`) })}</legend>
+    <div class="options">
+      {#each REGISTERS as register (register)}
+        <button
+          class:on={$settings.registers[module] === register}
+          aria-pressed={$settings.registers[module] === register}
+          data-register="{module}-{register}"
+          onclick={() => ($settings.registers = { ...$settings.registers, [module]: register })}
+          >{$t(`register.${register}`)}</button
+        >
+      {/each}
+    </div>
+  </fieldset>
+{/each}
+
+<style>
+  .hint {
+    margin: 0 0 0.5rem;
+    color: var(--muted);
+  }
+</style>

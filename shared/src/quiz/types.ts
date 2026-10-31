@@ -1,3 +1,5 @@
+import type { Register } from '../music/register.ts';
+
 /** One note to play, timed in seconds from the start of the sound. */
 export interface NoteEvent {
   midi: number;
@@ -23,6 +25,11 @@ export interface Question {
   /** Answer ids in display order. */
   choices: string[];
   answer: string;
+}
+
+/** Learner settings that shape generated questions. */
+export interface GenerateOptions {
+  register?: Register;
 }
 
 /** Source of randomness in [0, 1); injectable for tests. */

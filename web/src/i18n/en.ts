@@ -27,6 +27,7 @@ export const en = {
 
   'quiz.start': 'Start',
   'quiz.replay': 'Play again',
+  'quiz.reference': 'Reference C4',
   'quiz.next': 'Next',
   'quiz.tryAgain': 'Not quite – one more try.',
   'quiz.correct': 'Correct!',
@@ -38,6 +39,15 @@ export const en = {
 
   'settings.title': 'Settings',
   'settings.language': 'Language',
+  'settings.reference': 'Reference pitch',
+  'settings.referenceHint': 'Plays C4 before each question.',
+  'settings.on': 'On',
+  'settings.off': 'Off',
+  'settings.register': 'Octave: {module}',
+  'register.low': 'Low',
+  'register.medium': 'Medium',
+  'register.high': 'High',
+  'register.random': 'Random',
   'language.de': 'Deutsch',
   'language.en': 'English',
 };

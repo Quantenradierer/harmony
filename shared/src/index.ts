@@ -11,3 +11,4 @@ export * from './lessons/gating.ts';
 export * from './quiz/generate.ts';
 export * from './music/names.ts';
 export * from './lessons/practice.ts';
+export * from './music/register.ts';

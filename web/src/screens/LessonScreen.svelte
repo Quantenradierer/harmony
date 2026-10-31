@@ -1,6 +1,6 @@
 <script lang="ts">
   import { GATE, LESSONS, findLesson, isUnlocked, lessonScore, specCategories } from '@harmony/shared';
-  import { progress } from '../stores.ts';
+  import { progress, settings } from '../stores.ts';
   import { t, label } from '../i18n/index.ts';
   import { href } from '../router.ts';
   import { createSession } from '../quiz/session.ts';
@@ -17,7 +17,7 @@
   const path = lesson ? LESSONS[lesson.spec.module] : [];
   const index = path.findIndex((l) => l.id === id);
   const nextLesson = path[index + 1];
-  const quiz = lesson ? createSession({ spec: lesson.spec, lessonId: id, progress, player }) : undefined;
+  const quiz = lesson ? createSession({ spec: lesson.spec, lessonId: id, progress, player, settings }) : undefined;
   const passedBefore = $progress.passed.includes(id);
 
   const score = $derived(lessonScore($progress.lessonHistory[id] ?? []));

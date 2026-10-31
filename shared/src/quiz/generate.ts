@@ -1,12 +1,12 @@
 import type { QuizSpec } from '../lessons/lessons.ts';
 import { generateNoteQuestion } from './notes.ts';
-import type { Question, Rng } from './types.ts';
+import type { GenerateOptions, Question, Rng } from './types.ts';
 
 /** One entry point for every module's question generator. */
-export function generateQuestion(spec: QuizSpec, rng: Rng): Question {
+export function generateQuestion(spec: QuizSpec, rng: Rng, options: GenerateOptions = {}): Question {
   switch (spec.module) {
     case 'notes':
-      return generateNoteQuestion(spec, rng);
+      return generateNoteQuestion(spec, rng, options);
   }
 }
 

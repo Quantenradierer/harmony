@@ -28,6 +28,18 @@ describe('note questions', () => {
     expect(q.sound.events[0]!.midi).toBe(60);
   });
 
+  it('moves the note into the chosen register', () => {
+    const at = (register: 'low' | 'medium' | 'high') =>
+      generateNoteQuestion({ pitchClasses: [7] }, seq(0), { register }).sound.events[0]!.midi;
+    expect([at('low'), at('medium'), at('high')]).toEqual([55, 67, 79]);
+  });
+
+  it('keeps the answer the same in every register', () => {
+    const q = generateNoteQuestion({ pitchClasses: [0, 7] }, seq(0.9), { register: 'random' });
+    expect(q.answer).toBe('note:7');
+    expect(pitchClass(q.sound.events[0]!.midi)).toBe(7);
+  });
+
   it('only ever picks from the given pitch classes', () => {
     let r = 0;
     const rng = () => (r = (r + 0.137) % 1);

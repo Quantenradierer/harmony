@@ -1,6 +1,6 @@
 <script lang="ts">
   import { practiceCategories, practiceSpec, type ModuleId } from '@harmony/shared';
-  import { progress } from '../stores.ts';
+  import { progress, settings } from '../stores.ts';
   import { t, label } from '../i18n/index.ts';
   import { createSession } from '../quiz/session.ts';
   import { player } from '../audio/setup.ts';
@@ -24,7 +24,7 @@
 
   function start() {
     chosen = all.filter((c) => selected.includes(c));
-    quiz = createSession({ spec: practiceSpec(module, chosen), progress, player });
+    quiz = createSession({ spec: practiceSpec(module, chosen), progress, player, settings });
   }
 </script>
 

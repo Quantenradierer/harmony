@@ -5,7 +5,7 @@ import { QuizController, type QuizResult } from './controller.ts';
 import { Player } from '../audio/player.ts';
 import { FakeInstrument } from '../audio/fake.ts';
 
-function setup(pitchClasses = [0, 7]) {
+function setup(pitchClasses = [0, 7], reference?: () => { events: { midi: number; time: number; duration: number }[] } | undefined) {
   const instrument = new FakeInstrument();
   const player = new Player({ instrument: async () => instrument, now: () => 0 });
   const results: QuizResult[] = [];
@@ -13,6 +13,7 @@ function setup(pitchClasses = [0, 7]) {
     nextQuestion: () => generateNoteQuestion({ pitchClasses }, () => 0),
     player,
     onResult: (r) => results.push(r),
+    reference,
   });
   return { quiz, instrument, results };
 }
@@ -55,5 +56,20 @@ describe('quiz controller', () => {
     expect(results).toEqual([expect.objectContaining({ outcome: 'second-try', points: 5 })]);
     quiz.answer('note:7');
     expect(results).toHaveLength(1);
+  });
+
+  it('plays the reference pitch before each question when enabled', async () => {
+    let on = true;
+    const ref = { events: [{ midi: 60, time: 0, duration: 1 }] };
+    const { quiz, instrument } = setup([7], () => (on ? ref : undefined));
+    await quiz.next();
+    expect(instrument.played.map((p) => p.midi)).toEqual([60, 67]);
+    await quiz.replay();
+    expect(instrument.played.map((p) => p.midi)).toEqual([60, 67, 67]);
+    await quiz.replayReference();
+    expect(instrument.played.map((p) => p.midi)).toEqual([60, 67, 67, 60]);
+    on = false;
+    await quiz.next();
+    expect(instrument.played.map((p) => p.midi)).toEqual([60, 67, 67, 60, 67]);
   });
 });

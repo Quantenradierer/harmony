@@ -3,6 +3,8 @@ import type { Instrument } from './instrument.ts';
 
 /** Small lead time so the first note is not clipped. */
 const LEAD = 0.05;
+/** Silence between consecutive sounds, e.g. reference pitch and question. */
+export const GAP = 0.4;
 
 export interface PlayerDeps {
   instrument: () => Promise<Instrument>;
@@ -14,7 +16,7 @@ export interface PlayerDeps {
 export class Player {
   constructor(private deps: PlayerDeps) {}
 
-  /** Plays the sounds one after another; resolves with the total length in seconds. */
+  /** Plays the sounds one after another with a short gap; resolves with the total length. */
   async play(...sounds: Sound[]): Promise<number> {
     const instrument = await this.deps.instrument();
     await instrument.load();
@@ -23,9 +25,9 @@ export class Player {
     const start = t;
     for (const sound of sounds) {
       for (const e of sound.events) instrument.play(e.midi, t + e.time, e.duration);
-      t += soundLength(sound);
+      t += soundLength(sound) + GAP;
     }
-    return t - start;
+    return t - GAP - start;
   }
 }
 
