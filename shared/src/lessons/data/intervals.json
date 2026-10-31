@@ -1,0 +1,17 @@
+[
+  {"id": "intervals-1", "spec": {"module": "intervals", "intervals": ["P5", "P8"], "direction": "ascending"}, "introduces": ["interval:P5", "interval:P8"]},
+  {"id": "intervals-2", "spec": {"module": "intervals", "intervals": ["P5", "P8", "m3"], "direction": "ascending"}, "introduces": ["interval:m3"]},
+  {"id": "intervals-3", "spec": {"module": "intervals", "intervals": ["P5", "P8", "m3", "M3"], "direction": "ascending"}, "introduces": ["interval:M3"]},
+  {"id": "intervals-4", "spec": {"module": "intervals", "intervals": ["P5", "P8", "m3", "M3", "P4"], "direction": "ascending"}, "introduces": ["interval:P4"]},
+  {"id": "intervals-5", "spec": {"module": "intervals", "intervals": ["P5", "P8", "m3", "M3", "P4", "M6", "m6"], "direction": "ascending"}, "introduces": ["interval:M6", "interval:m6"]},
+  {"id": "intervals-6", "spec": {"module": "intervals", "intervals": ["P5", "P8", "m3", "M3", "P4", "M6", "m6", "m7", "M7"], "direction": "ascending"}, "introduces": ["interval:m7", "interval:M7"]},
+  {"id": "intervals-7", "spec": {"module": "intervals", "intervals": ["P5", "P8", "m3", "M3", "P4", "M6", "m6", "m7", "M7", "m2", "M2", "TT"], "direction": "ascending"}, "introduces": ["interval:m2", "interval:M2", "interval:TT"]},
+  {"id": "intervals-8", "spec": {"module": "intervals", "intervals": ["P5", "P8", "m3", "M3"], "direction": "descending"}},
+  {"id": "intervals-9", "spec": {"module": "intervals", "intervals": ["P5", "P8", "m3", "M3", "P4", "M6", "m6"], "direction": "descending"}},
+  {"id": "intervals-10", "spec": {"module": "intervals", "intervals": ["P5", "P8", "m3", "M3", "P4", "M6", "m6", "m7", "M7"], "direction": "descending"}},
+  {"id": "intervals-11", "spec": {"module": "intervals", "intervals": ["P5", "P8", "m3", "M3", "P4", "M6", "m6", "m7", "M7", "m2", "M2", "TT"], "direction": "descending"}},
+  {"id": "intervals-12", "spec": {"module": "intervals", "intervals": ["P5", "P8", "m3", "M3"], "direction": "harmonic"}},
+  {"id": "intervals-13", "spec": {"module": "intervals", "intervals": ["P5", "P8", "m3", "M3", "P4", "M6", "m6"], "direction": "harmonic"}},
+  {"id": "intervals-14", "spec": {"module": "intervals", "intervals": ["P5", "P8", "m3", "M3", "P4", "M6", "m6", "m7", "M7"], "direction": "harmonic"}},
+  {"id": "intervals-15", "spec": {"module": "intervals", "intervals": ["P5", "P8", "m3", "M3", "P4", "M6", "m6", "m7", "M7", "m2", "M2", "TT"], "direction": "harmonic"}}
+]

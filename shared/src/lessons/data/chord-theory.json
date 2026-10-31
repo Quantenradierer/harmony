@@ -1,0 +1,30 @@
+{
+  "maj": {
+    "en": "Root, major 3rd, perfect 5th. Sounds bright and stable.",
+    "de": "Grundton, große Terz, Quinte. Klingt hell und stabil."
+  },
+  "min": {
+    "en": "Root, minor 3rd, perfect 5th. Sounds darker, often sad.",
+    "de": "Grundton, kleine Terz, Quinte. Klingt dunkler, oft traurig."
+  },
+  "dim": {
+    "en": "Two minor 3rds stacked. Tense and unstable, like a horror film.",
+    "de": "Zwei kleine Terzen übereinander. Angespannt und instabil, wie im Gruselfilm."
+  },
+  "aug": {
+    "en": "Two major 3rds stacked. Floating and dreamy, it seems to rise.",
+    "de": "Zwei große Terzen übereinander. Schwebend und traumhaft, scheint nach oben zu streben."
+  },
+  "dom7": {
+    "en": "Major chord plus a minor 7th. Bluesy; wants to resolve.",
+    "de": "Durakkord plus kleine Septime. Bluesig; will sich auflösen."
+  },
+  "maj7": {
+    "en": "Major chord plus a major 7th. Soft and jazzy.",
+    "de": "Durakkord plus große Septime. Weich und jazzig."
+  },
+  "min7": {
+    "en": "Minor chord plus a minor 7th. Mellow and relaxed.",
+    "de": "Mollakkord plus kleine Septime. Sanft und entspannt."
+  }
+}

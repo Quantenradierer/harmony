@@ -1,0 +1,50 @@
+{
+  "m2": {
+    "en": "Smallest step: one semitone. Sounds tense. Think of the \"Jaws\" theme.",
+    "de": "Kleinster Schritt: ein Halbton. Klingt spannungsvoll. Denk an das Thema aus \"Der weiße Hai\"."
+  },
+  "M2": {
+    "en": "Two semitones, a whole step. The step from \"Hap-py\" to \"Birth-\" in \"Happy Birthday\".",
+    "de": "Zwei Halbtöne, ein Ganzton. Der Anfang von \"Alle meine Entchen\" (\"Al-le\")."
+  },
+  "m3": {
+    "en": "Three semitones; sounds sad. The start of \"Greensleeves\".",
+    "de": "Drei Halbtöne; klingt traurig. Abwärts: \"Kuckuck, Kuckuck\"."
+  },
+  "M3": {
+    "en": "Four semitones; sounds bright. The start of \"When the Saints Go Marching In\".",
+    "de": "Vier Halbtöne; klingt hell. Der Anfang von \"When the Saints Go Marching In\"."
+  },
+  "P4": {
+    "en": "Five semitones; open and solid. The start of \"Here Comes the Bride\".",
+    "de": "Fünf Halbtöne; offen und fest. Der Anfang von \"O Tannenbaum\" – oder das Martinshorn (\"Tatütata\")."
+  },
+  "TT": {
+    "en": "Six semitones, half an octave; restless. The start of \"Maria\" (West Side Story) or \"The Simpsons\".",
+    "de": "Sechs Halbtöne, eine halbe Oktave; unruhig. Der Anfang von \"Maria\" (West Side Story) oder \"Die Simpsons\"."
+  },
+  "P5": {
+    "en": "Seven semitones; strong and hollow. \"Twinkle, Twinkle, Little Star\" (\"Twin-kle, twin-kle\").",
+    "de": "Sieben Halbtöne; kräftig und leer. \"Morgen kommt der Weihnachtsmann\" (\"Mor-gen kommt\")."
+  },
+  "m6": {
+    "en": "Eight semitones; bittersweet. The start of the \"Love Story\" theme.",
+    "de": "Acht Halbtöne; bittersüß. Der Anfang des \"Love Story\"-Themas."
+  },
+  "M6": {
+    "en": "Nine semitones; warm. The start of \"My Bonnie Lies over the Ocean\".",
+    "de": "Neun Halbtöne; warm. Der Anfang von \"Ein Prosit der Gemütlichkeit\"."
+  },
+  "m7": {
+    "en": "Ten semitones; wants to resolve. \"Somewhere\" (\"There's a place…\") from West Side Story.",
+    "de": "Zehn Halbtöne; will sich auflösen. \"Somewhere\" (\"There's a place…\") aus West Side Story."
+  },
+  "M7": {
+    "en": "Eleven semitones, one short of an octave; sharp. The chorus of \"Take On Me\".",
+    "de": "Elf Halbtöne, einen Halbton unter der Oktave; scharf. Der Refrain von \"Take On Me\"."
+  },
+  "P8": {
+    "en": "Twelve semitones: the same note, higher. \"Somewhere Over the Rainbow\" (\"Some-where\").",
+    "de": "Zwölf Halbtöne: derselbe Ton, nur höher. \"Somewhere Over the Rainbow\" (\"Some-where\")."
+  }
+}

@@ -1,7 +1,7 @@
 node_modules/
 dist/
 docs/
-data/
+/server/data/
 test-results/
 playwright-report/
 *.log

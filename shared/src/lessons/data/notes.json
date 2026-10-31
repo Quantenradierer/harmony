@@ -1,0 +1,8 @@
+[
+  { "id": "notes-1", "spec": { "module": "notes", "pitchClasses": [0, 7] } },
+  { "id": "notes-2", "spec": { "module": "notes", "pitchClasses": [0, 4, 7] } },
+  { "id": "notes-3", "spec": { "module": "notes", "pitchClasses": [0, 4, 5, 7] } },
+  { "id": "notes-4", "spec": { "module": "notes", "pitchClasses": [0, 2, 4, 5, 7, 9, 11] } },
+  { "id": "notes-5", "spec": { "module": "notes", "pitchClasses": [0, 2, 4, 5, 6, 7, 9, 10, 11] } },
+  { "id": "notes-6", "spec": { "module": "notes", "pitchClasses": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] } }
+]

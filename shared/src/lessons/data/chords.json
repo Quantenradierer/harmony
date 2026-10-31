@@ -1,0 +1,15 @@
+[
+  { "id": "chords-1", "spec": { "module": "chords", "chords": ["maj", "min"], "format": "yesno", "target": "min" }, "introduces": ["chord:maj", "chord:min"] },
+  { "id": "chords-2", "spec": { "module": "chords", "chords": ["maj", "min"], "format": "choice" } },
+  { "id": "chords-3", "spec": { "module": "chords", "chords": ["maj", "min", "dim"], "format": "yesno", "target": "dim" }, "introduces": ["chord:dim"] },
+  { "id": "chords-4", "spec": { "module": "chords", "chords": ["maj", "min", "aug"], "format": "yesno", "target": "aug" }, "introduces": ["chord:aug"] },
+  { "id": "chords-5", "spec": { "module": "chords", "chords": ["maj", "min", "dim", "aug"], "format": "choice" } },
+  { "id": "chords-6", "spec": { "module": "chords", "chords": ["maj", "dom7"], "format": "yesno", "target": "dom7" }, "introduces": ["chord:dom7"] },
+  { "id": "chords-7", "spec": { "module": "chords", "chords": ["dom7", "maj7"], "format": "yesno", "target": "maj7" }, "introduces": ["chord:maj7"] },
+  { "id": "chords-8", "spec": { "module": "chords", "chords": ["dom7", "maj7", "min7"], "format": "yesno", "target": "min7" }, "introduces": ["chord:min7"] },
+  { "id": "chords-9", "spec": { "module": "chords", "chords": ["dom7", "maj7", "min7"], "format": "choice" } },
+  { "id": "chords-10", "spec": { "module": "chords", "chords": ["maj", "min"], "inversions": [1], "format": "choice" } },
+  { "id": "chords-11", "spec": { "module": "chords", "chords": ["maj", "min"], "inversions": [0, 1, 2], "format": "choice" } },
+  { "id": "chords-12", "spec": { "module": "chords", "chords": ["maj", "min", "dim", "aug"], "inversions": [0, 1, 2], "format": "choice" } },
+  { "id": "chords-13", "spec": { "module": "chords", "chords": ["maj", "min", "dim", "aug", "dom7", "maj7", "min7"], "format": "choice" } }
+]
