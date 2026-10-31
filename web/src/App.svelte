@@ -1,33 +1,59 @@
 <script lang="ts">
-  import { APP_NAME, generateNoteQuestion, recordAnswer, noteId } from '@harmony/shared';
-  import Quiz from './components/Quiz.svelte';
-  import { QuizController } from './quiz/controller.ts';
-  import { Player } from './audio/player.ts';
-  import { createSynth } from './audio/synth.ts';
-  import { getAudioOut } from './audio/context.ts';
-  import type { AppState } from './app-state.ts';
-
-  let { app }: { app: AppState } = $props();
-
-  const NAMES = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'H'];
-  const PCS = [0, 7];
-  let synth: ReturnType<typeof createSynth> | undefined;
-
-  const player = new Player({
-    instrument: async () => (synth ??= createSynth(getAudioOut())),
-    now: () => getAudioOut().context.currentTime,
-  });
-  const quiz = new QuizController({
-    nextQuestion: () => generateNoteQuestion({ pitchClasses: PCS }, Math.random),
-    player,
-    onResult: (r) =>
-      app.progress.update((p) =>
-        recordAnswer(p, { category: r.question.category, outcome: r.outcome, points: r.points }),
-      ),
-  });
-  const label = (id: string) => NAMES[Number(id.split(':')[1])]!;
-  const progress = $derived(app.progress);
+  import { route, href } from './router.ts';
+  import { t } from './i18n/index.ts';
+  import Home from './screens/Home.svelte';
+  import LessonScreen from './screens/LessonScreen.svelte';
+  import PracticeScreen from './screens/PracticeScreen.svelte';
+  import SettingsScreen from './screens/SettingsScreen.svelte';
 </script>
 
-<h1>{APP_NAME}</h1>
-<Quiz {quiz} {label} total={$progress.totalPoints} categories={PCS.map(noteId)} stats={$progress.categories} />
+<header>
+  {#if $route.name === 'home'}
+    <h1>{$t('app.title')}</h1>
+  {:else}
+    <a class="back" href={href({ name: 'home' })}>‹ {$t('nav.back')}</a>
+  {/if}
+  <nav>
+    <a href={href({ name: 'settings' })} aria-label={$t('nav.settings')} title={$t('nav.settings')}>⚙</a>
+  </nav>
+</header>
+
+{#if $route.name === 'lesson'}
+  {#key $route.id}<LessonScreen id={$route.id} />{/key}
+{:else if $route.name === 'practice'}
+  {#key $route.module}<PracticeScreen module={$route.module} />{/key}
+{:else if $route.name === 'settings'}
+  <SettingsScreen />
+{:else}
+  <Home />
+{/if}
+
+<style>
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 3rem;
+  }
+  h1 {
+    font-size: 1.5rem;
+  }
+  nav {
+    display: flex;
+    gap: 0.5rem;
+  }
+  nav a,
+  .back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 3rem;
+    min-height: 3rem;
+    font-size: 1.1rem;
+    color: var(--fg);
+    text-decoration: none;
+  }
+  nav a {
+    font-size: 1.5rem;
+  }
+</style>

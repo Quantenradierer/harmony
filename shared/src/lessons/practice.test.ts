@@ -1,0 +1,15 @@
+import { describe, expect, it } from 'vitest';
+import { practiceCategories, practiceSpec } from './practice.ts';
+import { generateQuestion } from '../quiz/generate.ts';
+
+describe('free practice', () => {
+  it('offers all 12 notes regardless of unlocks', () => {
+    expect(practiceCategories('notes')).toHaveLength(12);
+  });
+
+  it('builds a spec that only asks the chosen categories', () => {
+    const spec = practiceSpec('notes', ['note:1', 'note:11']);
+    const q = generateQuestion(spec, () => 0.99);
+    expect(q.choices).toEqual(['note:1', 'note:11']);
+  });
+});

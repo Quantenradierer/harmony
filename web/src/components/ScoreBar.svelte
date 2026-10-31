@@ -1,11 +1,13 @@
 <script lang="ts">
+  import { t } from '../i18n/index.ts';
+
   let { session, total, gained }: { session: number; total: number; gained?: number } = $props();
 </script>
 
 <div class="score">
-  <span>Sitzung: <strong data-testid="session-score">{session}</strong></span>
+  <span>{$t('score.session')}: <strong data-testid="session-score">{session}</strong></span>
   {#if gained}<span class="gained">+{gained}</span>{/if}
-  <span>Gesamt: <strong data-testid="total-score">{total}</strong></span>
+  <span>{$t('score.total')}: <strong data-testid="total-score">{total}</strong></span>
 </div>
 
 <style>

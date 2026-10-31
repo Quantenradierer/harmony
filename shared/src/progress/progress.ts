@@ -10,10 +10,14 @@ export interface CategoryStats {
 export interface Progress {
   totalPoints: number;
   categories: Record<string, CategoryStats>;
+  /** Recent first-try results per lesson id, oldest first. */
+  lessonHistory: Record<string, boolean[]>;
+  /** Ids of lessons whose gate was reached; the next lesson is unlocked. */
+  passed: string[];
 }
 
 export function emptyProgress(): Progress {
-  return { totalPoints: 0, categories: {} };
+  return { totalPoints: 0, categories: {}, lessonHistory: {}, passed: [] };
 }
 
 export interface AnswerRecord {
