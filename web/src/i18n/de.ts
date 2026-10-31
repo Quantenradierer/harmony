@@ -96,4 +96,16 @@ export const de: Messages = {
   'playback.sequence': 'Ton für Ton',
   'language.de': 'Deutsch',
   'language.en': 'English',
+
+  'feedback.title': 'Feedback',
+  'feedback.intro': 'Was gefällt dir, was fehlt, was stört? Das Feedback ist anonym.',
+  'feedback.placeholder': 'Dein Feedback…',
+  'feedback.count': '{n} / {max}',
+  'feedback.send': 'Senden',
+  'feedback.sending': 'Wird gesendet…',
+  'feedback.sent': 'Danke! Dein Feedback wurde gesendet.',
+  'feedback.tooLong': 'Bitte höchstens {max} Zeichen.',
+  'feedback.rejected': 'Das Feedback konnte nicht angenommen werden.',
+  'feedback.rateLimited': 'Zu viele Nachrichten – bitte warte eine Minute und versuche es erneut.',
+  'feedback.network': 'Der Server ist nicht erreichbar. Bitte versuche es später erneut.',
 };

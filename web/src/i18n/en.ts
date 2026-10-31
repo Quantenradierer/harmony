@@ -95,6 +95,18 @@ export const en = {
   'playback.sequence': 'Note by note',
   'language.de': 'Deutsch',
   'language.en': 'English',
+
+  'feedback.title': 'Feedback',
+  'feedback.intro': 'What works, what is missing, what bugs you? Feedback is anonymous.',
+  'feedback.placeholder': 'Your feedback…',
+  'feedback.count': '{n} / {max}',
+  'feedback.send': 'Send',
+  'feedback.sending': 'Sending…',
+  'feedback.sent': 'Thank you! Your feedback was sent.',
+  'feedback.tooLong': 'Please keep it under {max} characters.',
+  'feedback.rejected': 'The feedback could not be accepted.',
+  'feedback.rateLimited': 'Too many messages – please wait a minute and try again.',
+  'feedback.network': 'Could not reach the server. Please try again later.',
 };
 
 export type MessageKey = keyof typeof en;

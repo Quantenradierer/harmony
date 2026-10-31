@@ -18,3 +18,4 @@ export * from './quiz/intervals.ts';
 export * from './quiz/playback.ts';
 export * from './music/chords.ts';
 export * from './quiz/chords.ts';
+export * from './api/feedback.ts';

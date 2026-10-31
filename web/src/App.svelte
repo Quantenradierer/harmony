@@ -5,6 +5,7 @@
   import LessonScreen from './screens/LessonScreen.svelte';
   import PracticeScreen from './screens/PracticeScreen.svelte';
   import SettingsScreen from './screens/SettingsScreen.svelte';
+  import FeedbackScreen from './screens/FeedbackScreen.svelte';
 </script>
 
 <header>
@@ -14,6 +15,7 @@
     <a class="back" href={href({ name: 'home' })}>‹ {$t('nav.back')}</a>
   {/if}
   <nav>
+    <a href={href({ name: 'feedback' })} aria-label={$t('nav.feedback')} title={$t('nav.feedback')}>✉</a>
     <a href={href({ name: 'settings' })} aria-label={$t('nav.settings')} title={$t('nav.settings')}>⚙</a>
   </nav>
 </header>
@@ -24,6 +26,8 @@
   {#key $route.module}<PracticeScreen module={$route.module} />{/key}
 {:else if $route.name === 'settings'}
   <SettingsScreen />
+{:else if $route.name === 'feedback'}
+  <FeedbackScreen />
 {:else}
   <Home />
 {/if}
