@@ -4,7 +4,7 @@ export type Theme = 'sunny' | 'calm' | 'night';
 export const THEMES: Theme[] = ['sunny', 'calm', 'night'];
 
 /** Browser chrome color per theme. */
-export const THEME_COLORS: Record<Theme, string> = { sunny: '#d9480f', calm: '#3b5bdb', night: '#1d1723' };
+export const THEME_COLORS: Record<Theme, string> = { sunny: '#d9602b', calm: '#3b5bdb', night: '#1d1723' };
 
 export interface Settings {
   language: Language;
@@ -23,7 +23,7 @@ export interface Settings {
 export function defaultSettings(): Settings {
   return {
     language: 'de',
-    theme: 'sunny',
+    theme: 'night',
     referencePitch: false,
     registers: { notes: 'medium', intervals: 'medium', chords: 'medium' },
     playback: 'together',

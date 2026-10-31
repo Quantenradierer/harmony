@@ -1,17 +1,13 @@
-:root,
 :root[data-theme='sunny'] {
   color-scheme: light;
-  --bg: #fff8ec;
+  --bg: #f6f0e6;
   --fg: #2b2118;
   --muted: #7a6a58;
-  --surface: #ffffff;
-  --border: #f0d9b5;
-  --accent: #d9480f;
+  --surface: #fffdf9;
+  --border: #e3d6c0;
+  --accent: #d9602b;
   --green: #2f9e44;
   --red: #e03131;
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  background: var(--bg);
-  color: var(--fg);
 }
 
 :root[data-theme='calm'] {
@@ -26,6 +22,7 @@
   --red: #c92a2a;
 }
 
+:root,
 :root[data-theme='night'] {
   color-scheme: dark;
   --bg: #1d1723;
@@ -36,6 +33,13 @@
   --accent: #e8590c;
   --green: #51cf66;
   --red: #ff6b6b;
+}
+
+/* Night is the default, also before the saved theme has loaded. */
+:root {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
 }
 
 * {
