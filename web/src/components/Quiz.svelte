@@ -3,6 +3,7 @@
   import type { QuizController } from '../quiz/controller.ts';
   import { progress, settings } from '../stores.ts';
   import { t, language, yesNoQuestion } from '../i18n/index.ts';
+  import { instrumentStatus } from '../audio/setup.ts';
   import AnswerButtons from './AnswerButtons.svelte';
   import ScoreBar from './ScoreBar.svelte';
   import AccuracyList from './AccuracyList.svelte';
@@ -22,13 +23,18 @@
   const round = $derived($quizState.round);
 </script>
 
+{#if $instrumentStatus === 'loading'}
+  <p class="status" role="status">{$t('quiz.loading')}</p>
+{:else if $instrumentStatus === 'error'}
+  <p class="status error" role="alert">{$t('quiz.loadError')}</p>
+{/if}
 <ScoreBar session={$quizState.session.points} total={$progress.totalPoints} gained={$quizState.gained} />
 {#if round}
   <section class="quiz">
     <div class="replays">
-      <button class="replay" onclick={() => quiz.replay()}>🔊 {$t('quiz.replay')}</button>
+      <button class="replay" onclick={() => quiz.replay().catch(() => {})}>🔊 {$t('quiz.replay')}</button>
       {#if $settings.referencePitch}
-        <button class="reference" onclick={() => quiz.replayReference()}>{$t('quiz.reference')}</button>
+        <button class="reference" onclick={() => quiz.replayReference().catch(() => {})}>{$t('quiz.reference')}</button>
       {/if}
     </div>
     {#if round.question.prompt.kind === 'yesno'}
@@ -45,11 +51,11 @@
       {/if}
     </p>
     {#if round.done}
-      <button class="primary next" onclick={() => quiz.next()}>{$t('quiz.next')}</button>
+      <button class="primary next" onclick={() => quiz.next().catch(() => {})}>{$t('quiz.next')}</button>
     {/if}
   </section>
 {:else}
-  <button class="primary start" onclick={() => quiz.next()}>{$t('quiz.start')}</button>
+  <button class="primary start" onclick={() => quiz.next().catch(() => {})}>{$t('quiz.start')}</button>
 {/if}
 <AccuracyList {categories} {stats} {label} />
 
@@ -65,6 +71,13 @@
   }
   .replays button {
     flex: 1;
+  }
+  .status {
+    margin: 0;
+    color: var(--muted);
+  }
+  .status.error {
+    color: var(--red);
   }
   .prompt {
     margin: 0;

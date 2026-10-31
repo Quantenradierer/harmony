@@ -7,6 +7,8 @@ export interface Settings {
   registers: Record<ModuleId, Register>;
   /** How harmonic intervals and chords are played. */
   playback: Playback;
+  /** Id from the instrument registry. */
+  instrument: string;
 }
 
 export function defaultSettings(): Settings {
@@ -15,5 +17,6 @@ export function defaultSettings(): Settings {
     referencePitch: false,
     registers: { notes: 'medium', intervals: 'medium', chords: 'medium' },
     playback: 'together',
+    instrument: 'synth',
   };
 }

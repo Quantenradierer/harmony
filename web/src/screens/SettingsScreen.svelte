@@ -1,7 +1,8 @@
 <script lang="ts">
   import { LANGUAGES, REGISTERS, type ModuleId } from '@harmony/shared';
   import { settings } from '../stores.ts';
-  import { t } from '../i18n/index.ts';
+  import { t, language } from '../i18n/index.ts';
+  import { INSTRUMENTS } from '../audio/registry.ts';
 
   const MODULES: ModuleId[] = ['notes', 'intervals', 'chords'];
 </script>
@@ -17,6 +18,20 @@
         aria-pressed={$settings.language === lang}
         data-language={lang}
         onclick={() => ($settings.language = lang)}>{$t(`language.${lang}`)}</button
+      >
+    {/each}
+  </div>
+</fieldset>
+
+<fieldset>
+  <legend>{$t('settings.instrument')}</legend>
+  <div class="options">
+    {#each INSTRUMENTS as instrument (instrument.id)}
+      <button
+        class:on={$settings.instrument === instrument.id}
+        aria-pressed={$settings.instrument === instrument.id}
+        data-instrument={instrument.id}
+        onclick={() => ($settings.instrument = instrument.id)}>{instrument.name[$language]}</button
       >
     {/each}
   </div>

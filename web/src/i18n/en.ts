@@ -68,6 +68,8 @@ export const en = {
   'quiz.reference': 'Reference C4',
   'quiz.next': 'Next',
   'quiz.isThis': 'Is this {chord}?',
+  'quiz.loading': 'Loading instrument…',
+  'quiz.loadError': 'Could not load the instrument. Check the connection and press play again, or pick another instrument in the settings.',
   'quiz.tryAgain': 'Not quite – one more try.',
   'quiz.correct': 'Correct!',
   'quiz.wrong': 'The answer was {answer}.',
@@ -78,6 +80,7 @@ export const en = {
 
   'settings.title': 'Settings',
   'settings.language': 'Language',
+  'settings.instrument': 'Instrument',
   'settings.reference': 'Reference pitch',
   'settings.referenceHint': 'Plays C4 before each question.',
   'settings.on': 'On',

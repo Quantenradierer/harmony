@@ -69,6 +69,8 @@ export const de: Messages = {
   'quiz.reference': 'Referenzton C4',
   'quiz.next': 'Weiter',
   'quiz.isThis': 'Ist das {chord}?',
+  'quiz.loading': 'Instrument wird geladen…',
+  'quiz.loadError': 'Das Instrument konnte nicht geladen werden. Prüfe die Verbindung und tippe nochmal auf Abspielen – oder wähle in den Einstellungen ein anderes Instrument.',
   'quiz.tryAgain': 'Nicht ganz – noch ein Versuch.',
   'quiz.correct': 'Richtig!',
   'quiz.wrong': 'Richtig wäre: {answer}.',
@@ -79,6 +81,7 @@ export const de: Messages = {
 
   'settings.title': 'Einstellungen',
   'settings.language': 'Sprache',
+  'settings.instrument': 'Instrument',
   'settings.reference': 'Referenzton',
   'settings.referenceHint': 'Spielt vor jeder Frage ein C4.',
   'settings.on': 'An',
