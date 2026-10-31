@@ -19,6 +19,7 @@ const someSettings: Settings = {
   ...defaultSettings(),
   language: 'en',
   instrument: 'harp',
+  theme: 'night',
   referencePitch: true,
   registers: { notes: 'random', intervals: 'low', chords: 'high' },
 };

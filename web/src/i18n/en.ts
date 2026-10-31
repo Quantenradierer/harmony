@@ -80,6 +80,10 @@ export const en = {
 
   'settings.title': 'Settings',
   'settings.language': 'Language',
+  'settings.theme': 'Color scheme',
+  'theme.sunny': 'Sunny',
+  'theme.calm': 'Calm',
+  'theme.night': 'Night',
   'settings.instrument': 'Instrument',
   'settings.reference': 'Reference pitch',
   'settings.referenceHint': 'Plays C4 before each question.',

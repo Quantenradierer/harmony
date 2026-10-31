@@ -7,6 +7,14 @@
   import SettingsScreen from './screens/SettingsScreen.svelte';
   import FeedbackScreen from './screens/FeedbackScreen.svelte';
   import UpdatePrompt from './components/UpdatePrompt.svelte';
+  import { settings } from './stores.ts';
+  import { THEME_COLORS } from './settings.ts';
+
+  $effect(() => {
+    const theme = $settings.theme;
+    document.documentElement.dataset.theme = theme;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', THEME_COLORS[theme]);
+  });
 </script>
 
 <header>

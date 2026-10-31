@@ -81,6 +81,10 @@ export const de: Messages = {
 
   'settings.title': 'Einstellungen',
   'settings.language': 'Sprache',
+  'settings.theme': 'Farbschema',
+  'theme.sunny': 'Sonnig',
+  'theme.calm': 'Ruhig',
+  'theme.night': 'Nacht',
   'settings.instrument': 'Instrument',
   'settings.reference': 'Referenzton',
   'settings.referenceHint': 'Spielt vor jeder Frage ein C4.',

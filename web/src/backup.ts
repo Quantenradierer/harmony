@@ -1,5 +1,5 @@
 import { emptyProgress, LANGUAGES, REGISTERS, type Progress } from '@harmony/shared';
-import { defaultSettings, type Settings } from './settings.ts';
+import { defaultSettings, THEMES, type Settings, type Theme } from './settings.ts';
 
 export const BACKUP_APP = 'harmony-trainer';
 export const BACKUP_VERSION = 1;
@@ -50,6 +50,7 @@ function validSettings(s: unknown): s is Partial<Settings> {
     if (!isObject(s.registers)) return false;
     if (!Object.values(s.registers).every((r) => REGISTERS.includes(r as Settings['registers']['notes']))) return false;
   }
+  if (s.theme !== undefined && !THEMES.includes(s.theme as Theme)) return false;
   if (s.referencePitch !== undefined && typeof s.referencePitch !== 'boolean') return false;
   if (s.playback !== undefined && s.playback !== 'together' && s.playback !== 'sequence') return false;
   if (s.instrument !== undefined && typeof s.instrument !== 'string') return false;

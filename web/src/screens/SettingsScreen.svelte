@@ -3,6 +3,7 @@
   import { settings } from '../stores.ts';
   import { t, language } from '../i18n/index.ts';
   import { INSTRUMENTS } from '../audio/registry.ts';
+  import { THEMES } from '../settings.ts';
   import BackupPanel from '../components/BackupPanel.svelte';
 
   const MODULES: ModuleId[] = ['notes', 'intervals', 'chords'];
@@ -19,6 +20,20 @@
         aria-pressed={$settings.language === lang}
         data-language={lang}
         onclick={() => ($settings.language = lang)}>{$t(`language.${lang}`)}</button
+      >
+    {/each}
+  </div>
+</fieldset>
+
+<fieldset>
+  <legend>{$t('settings.theme')}</legend>
+  <div class="options">
+    {#each THEMES as theme (theme)}
+      <button
+        class:on={$settings.theme === theme}
+        aria-pressed={$settings.theme === theme}
+        data-theme-option={theme}
+        onclick={() => ($settings.theme = theme)}>{$t(`theme.${theme}`)}</button
       >
     {/each}
   </div>
