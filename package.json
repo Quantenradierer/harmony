@@ -1,0 +1,16 @@
+{
+  "name": "harmonytrainer",
+  "private": true,
+  "type": "module",
+  "workspaces": ["shared", "web", "server"],
+  "scripts": {
+    "build": "npm run build -w web && npm run build -w server",
+    "test": "npm test --workspaces",
+    "check": "npm run check --workspaces",
+    "start": "npm start -w server"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.0",
+    "vitest": "^5.0.5"
+  }
+}

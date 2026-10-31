@@ -1,0 +1,14 @@
+services:
+  harmonytrainer:
+    build: .
+    image: harmonytrainer:latest
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${HOST_PORT:-3000}:3000"
+    environment:
+      FEEDBACK_TOKEN: ${FEEDBACK_TOKEN:-}
+    volumes:
+      - harmony-data:/data
+
+volumes:
+  harmony-data:
