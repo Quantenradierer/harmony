@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#3b5bdb"/>
+  <g fill="#fff">
+    <ellipse cx="176" cy="352" rx="56" ry="42" transform="rotate(-20 176 352)"/>
+    <ellipse cx="336" cy="320" rx="56" ry="42" transform="rotate(-20 336 320)"/>
+    <rect x="218" y="136" width="20" height="214"/>
+    <rect x="378" y="104" width="20" height="214"/>
+    <polygon points="218,136 398,104 398,156 218,188"/>
+  </g>
+</svg>

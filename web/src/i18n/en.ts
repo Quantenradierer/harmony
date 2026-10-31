@@ -106,7 +106,12 @@ export const en = {
   'feedback.tooLong': 'Please keep it under {max} characters.',
   'feedback.rejected': 'The feedback could not be accepted.',
   'feedback.rateLimited': 'Too many messages – please wait a minute and try again.',
-  'feedback.network': 'Could not reach the server. Please try again later.',
+  'feedback.queued': 'You are offline. Your feedback is saved and will be sent automatically.',
+  'feedback.pending': 'Waiting to be sent: {n}',
+
+  'update.available': 'A new version is available.',
+  'update.reload': 'Reload',
+  'update.later': 'Later',
 };
 
 export type MessageKey = keyof typeof en;

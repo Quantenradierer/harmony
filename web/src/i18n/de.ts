@@ -107,5 +107,10 @@ export const de: Messages = {
   'feedback.tooLong': 'Bitte höchstens {max} Zeichen.',
   'feedback.rejected': 'Das Feedback konnte nicht angenommen werden.',
   'feedback.rateLimited': 'Zu viele Nachrichten – bitte warte eine Minute und versuche es erneut.',
-  'feedback.network': 'Der Server ist nicht erreichbar. Bitte versuche es später erneut.',
+  'feedback.queued': 'Du bist offline. Dein Feedback ist gespeichert und wird automatisch gesendet.',
+  'feedback.pending': 'Noch nicht gesendet: {n}',
+
+  'update.available': 'Eine neue Version ist verfügbar.',
+  'update.reload': 'Neu laden',
+  'update.later': 'Später',
 };

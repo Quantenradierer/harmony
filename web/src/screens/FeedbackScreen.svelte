@@ -1,11 +1,13 @@
 <script lang="ts">
   import { FEEDBACK_MAX_LENGTH } from '@harmony/shared';
   import { t } from '../i18n/index.ts';
-  import { postFeedback, type SendResult } from '../feedback/client.ts';
+  import { feedbackQueue } from '../stores.ts';
+  import type { SubmitResult } from '../feedback/queue.ts';
 
   let text = $state('');
   let sending = $state(false);
-  let result = $state<SendResult>();
+  let result = $state<SubmitResult>();
+  const pending = feedbackQueue.pending;
   const length = $derived([...text.trim()].length);
   const tooLong = $derived(length > FEEDBACK_MAX_LENGTH);
 
@@ -13,16 +15,16 @@
     event.preventDefault();
     if (length === 0 || tooLong) return;
     sending = true;
-    result = await postFeedback(text.trim());
+    result = await feedbackQueue.submit(text.trim());
     sending = false;
-    if (result === 'sent') text = '';
+    if (result === 'sent' || result === 'queued') text = '';
   }
 
   const messages = {
     sent: 'feedback.sent',
     rejected: 'feedback.rejected',
     'rate-limited': 'feedback.rateLimited',
-    network: 'feedback.network',
+    queued: 'feedback.queued',
   } as const;
 </script>
 
@@ -47,12 +49,20 @@
 </form>
 
 {#if result}
-  <p class="result" class:ok={result === 'sent'} role="status" data-testid="feedback-result">
+  <p class="result" class:ok={result === 'sent' || result === 'queued'} role="status" data-testid="feedback-result">
     {$t(messages[result])}
   </p>
 {/if}
 
+{#if $pending > 0}
+  <p class="pending" data-testid="feedback-pending">{$t('feedback.pending', { n: $pending })}</p>
+{/if}
+
 <style>
+  .pending {
+    margin: 0;
+    color: var(--muted);
+  }
   form {
     display: flex;
     flex-direction: column;

@@ -6,6 +6,7 @@
   import PracticeScreen from './screens/PracticeScreen.svelte';
   import SettingsScreen from './screens/SettingsScreen.svelte';
   import FeedbackScreen from './screens/FeedbackScreen.svelte';
+  import UpdatePrompt from './components/UpdatePrompt.svelte';
 </script>
 
 <header>
@@ -31,6 +32,8 @@
 {:else}
   <Home />
 {/if}
+
+<UpdatePrompt />
 
 <style>
   header {
