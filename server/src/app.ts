@@ -47,9 +47,17 @@ export function createApp(options: AppOptions = {}): Hono {
   const error = (c: Context, status: 400 | 401 | 413 | 429, code: ApiError['error']) =>
     c.json<ApiError>({ error: code }, status);
 
-  app.get('/api/health', (c) => c.json({ ok: true, app: APP_NAME }));
-
   const feedback = options.feedback;
+
+  app.get('/api/health', (c) => {
+    try {
+      feedback?.ping();
+    } catch {
+      return c.json({ ok: false, app: APP_NAME }, 503);
+    }
+    return c.json({ ok: true, app: APP_NAME });
+  });
+
   if (feedback) {
     app.post(
       FEEDBACK_PATH,

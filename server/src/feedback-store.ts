@@ -32,6 +32,11 @@ export class FeedbackStore {
     return rows.map((r) => ({ id: r.id, text: r.text, createdAt: r.created_at }));
   }
 
+  /** Throws if the database cannot be queried. */
+  ping(): void {
+    this.db.prepare('SELECT 1').get();
+  }
+
   close(): void {
     this.db.close();
   }

@@ -21,3 +21,9 @@ npm start         # serve the built app on http://localhost:3000
 ```sh
 docker compose up -d --build   # builds and starts the single container
 ```
+
+`compose.yaml` builds locally. For the server, `compose.prod.yaml` runs the
+image from GHCR plus Watchtower for automatic updates; CI
+(`.github/workflows/deploy.yml`) tests, builds and pushes the image on every
+push to `main`. Environment: `FEEDBACK_TOKEN` (bearer token for
+`GET /api/feedback`), optional `HOST_PORT`, `WATCHTOWER_POLL_INTERVAL`.
