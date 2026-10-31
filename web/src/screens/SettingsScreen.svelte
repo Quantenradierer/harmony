@@ -3,6 +3,7 @@
   import { settings } from '../stores.ts';
   import { t, language } from '../i18n/index.ts';
   import { INSTRUMENTS } from '../audio/registry.ts';
+  import BackupPanel from '../components/BackupPanel.svelte';
 
   const MODULES: ModuleId[] = ['notes', 'intervals', 'chords'];
 </script>
@@ -82,6 +83,8 @@
     </div>
   </fieldset>
 {/each}
+
+<BackupPanel />
 
 <style>
   .hint {
