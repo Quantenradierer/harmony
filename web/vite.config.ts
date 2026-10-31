@@ -6,8 +6,8 @@ export default defineConfig({
   plugins: [
     svelte(),
     VitePWA({
-      // New versions wait until the user accepts the "reload" prompt.
-      registerType: 'prompt',
+      // New versions activate and reload the app automatically.
+      registerType: 'autoUpdate',
       includeAssets: ['icon.svg', 'apple-touch-icon.png'],
       manifest: {
         name: 'Harmony Trainer',
