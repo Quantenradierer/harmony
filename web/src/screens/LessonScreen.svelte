@@ -1,11 +1,13 @@
 <script lang="ts">
   import { GATE, LESSONS, findLesson, isUnlocked, lessonScore, specCategories } from '@harmony/shared';
   import { progress, settings } from '../stores.ts';
-  import { t, label } from '../i18n/index.ts';
+  import { t, label, language } from '../i18n/index.ts';
   import { href } from '../router.ts';
   import { createSession } from '../quiz/session.ts';
   import { player } from '../audio/setup.ts';
   import Quiz from '../components/Quiz.svelte';
+  import TheoryCards from '../components/TheoryCards.svelte';
+  import { lessonSummary } from '../lessons.ts';
 
   import { untrack } from 'svelte';
 
@@ -26,6 +28,8 @@
 
 {#if lesson && quiz && isUnlocked($progress, path, id)}
   <h2>{$t(`module.${lesson.spec.module}`)} · {$t('lesson.title', { n: index + 1 })}</h2>
+  <p class="summary">{lessonSummary(lesson, $language)}</p>
+  <TheoryCards categories={lesson.introduces ?? []} />
   <p class="goal">
     <span data-testid="lesson-progress"
       >{$t('lesson.progress', { correct: score.correct, answered: score.answered, window: GATE.window })}</span
@@ -43,6 +47,9 @@
 {/if}
 
 <style>
+  .summary {
+    margin: 0;
+  }
   .goal {
     margin: 0;
     color: var(--muted);

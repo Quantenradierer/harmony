@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { LESSONS, isUnlocked, specCategories, type ModuleId } from '@harmony/shared';
+  import { LESSONS, isUnlocked, type ModuleId } from '@harmony/shared';
   import { progress } from '../stores.ts';
-  import { t, label } from '../i18n/index.ts';
+  import { t, language } from '../i18n/index.ts';
+  import { lessonSummary } from '../lessons.ts';
   import { href } from '../router.ts';
 
   const MODULES: ModuleId[] = ['notes', 'intervals', 'chords'];
@@ -18,7 +19,7 @@
           {#if open}
             <a class="lesson" class:passed href={href({ name: 'lesson', id: lesson.id })} data-lesson={lesson.id}>
               <strong>{$t('lesson.title', { n: i + 1 })}</strong>
-              <span>{specCategories(lesson.spec).map($label).join(', ')}</span>
+              <span>{lessonSummary(lesson, $language)}</span>
               {#if passed}<em>✓ {$t('home.passed')}</em>{/if}
             </a>
           {:else}

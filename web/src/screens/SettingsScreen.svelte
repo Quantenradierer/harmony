@@ -37,6 +37,20 @@
   </div>
 </fieldset>
 
+<fieldset>
+  <legend>{$t('settings.playback')}</legend>
+  <div class="options">
+    {#each ['together', 'sequence'] as const as playback (playback)}
+      <button
+        class:on={$settings.playback === playback}
+        aria-pressed={$settings.playback === playback}
+        data-playback={playback}
+        onclick={() => ($settings.playback = playback)}>{$t(`playback.${playback}`)}</button
+      >
+    {/each}
+  </div>
+</fieldset>
+
 {#each MODULES as module (module)}
   <fieldset>
     <legend>{$t('settings.register', { module: $t(`module.${module}`) })}</legend>

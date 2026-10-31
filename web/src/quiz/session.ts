@@ -27,7 +27,10 @@ export function createSession(o: SessionOptions): QuizController {
   const rng = o.rng ?? Math.random;
   return new QuizController({
     nextQuestion: () =>
-      generateQuestion(o.spec, rng, { register: get(o.settings).registers[o.spec.module] }),
+      generateQuestion(o.spec, rng, {
+        register: get(o.settings).registers[o.spec.module],
+        playback: get(o.settings).playback,
+      }),
     player: o.player,
     reference: () =>
       get(o.settings).referencePitch

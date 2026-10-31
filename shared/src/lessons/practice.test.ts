@@ -12,4 +12,12 @@ describe('free practice', () => {
     const q = generateQuestion(spec, () => 0.99);
     expect(q.choices).toEqual(['note:1', 'note:11']);
   });
+
+  it('offers all intervals with a chosen direction', () => {
+    expect(practiceCategories('intervals')).toHaveLength(12);
+    const spec = practiceSpec('intervals', ['interval:m2', 'interval:TT'], { direction: 'harmonic' });
+    expect(spec).toEqual({ module: 'intervals', intervals: ['m2', 'TT'], direction: 'harmonic' });
+    const q = generateQuestion(spec, () => 0);
+    expect(q.choices).toEqual(['interval:m2', 'interval:TT']);
+  });
 });

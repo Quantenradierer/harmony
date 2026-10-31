@@ -12,3 +12,7 @@ export * from './quiz/generate.ts';
 export * from './music/names.ts';
 export * from './lessons/practice.ts';
 export * from './music/register.ts';
+export * from './lessons/theory.ts';
+export * from './music/intervals.ts';
+export * from './quiz/intervals.ts';
+export * from './quiz/playback.ts';

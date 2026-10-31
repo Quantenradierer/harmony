@@ -1,4 +1,5 @@
 import type { Register } from '../music/register.ts';
+import type { Playback } from './playback.ts';
 
 /** One note to play, timed in seconds from the start of the sound. */
 export interface NoteEvent {
@@ -30,6 +31,7 @@ export interface Question {
 /** Learner settings that shape generated questions. */
 export interface GenerateOptions {
   register?: Register;
+  playback?: Playback;
 }
 
 /** Source of randomness in [0, 1); injectable for tests. */

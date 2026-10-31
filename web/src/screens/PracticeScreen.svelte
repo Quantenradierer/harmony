@@ -1,5 +1,11 @@
 <script lang="ts">
-  import { practiceCategories, practiceSpec, type ModuleId } from '@harmony/shared';
+  import {
+    INTERVAL_DIRECTIONS,
+    practiceCategories,
+    practiceSpec,
+    type IntervalDirection,
+    type ModuleId,
+  } from '@harmony/shared';
   import { progress, settings } from '../stores.ts';
   import { t, label } from '../i18n/index.ts';
   import { createSession } from '../quiz/session.ts';
@@ -17,6 +23,7 @@
   let selected = $state<string[]>([...all]);
   let quiz = $state<QuizController>();
   let chosen = $state<string[]>([]);
+  let direction = $state<IntervalDirection>('ascending');
 
   function toggle(id: string) {
     selected = selected.includes(id) ? selected.filter((s) => s !== id) : [...selected, id];
@@ -24,7 +31,7 @@
 
   function start() {
     chosen = all.filter((c) => selected.includes(c));
-    quiz = createSession({ spec: practiceSpec(module, chosen), progress, player, settings });
+    quiz = createSession({ spec: practiceSpec(module, chosen, { direction }), progress, player, settings });
   }
 </script>
 
@@ -42,6 +49,18 @@
       </button>
     {/each}
   </div>
+  {#if module === 'intervals'}
+    <fieldset>
+      <legend>{$t('practice.direction')}</legend>
+      <div class="options">
+        {#each INTERVAL_DIRECTIONS as d (d)}
+          <button class:on={direction === d} aria-pressed={direction === d} onclick={() => (direction = d)}
+            >{$t(`direction.${d}`)}</button
+          >
+        {/each}
+      </div>
+    </fieldset>
+  {/if}
   {#if selected.length < 2}<p class="hint">{$t('practice.empty')}</p>{/if}
   <button class="primary" disabled={selected.length < 2} onclick={start}>{$t('practice.start')}</button>
 {/if}
