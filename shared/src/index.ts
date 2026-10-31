@@ -16,3 +16,5 @@ export * from './lessons/theory.ts';
 export * from './music/intervals.ts';
 export * from './quiz/intervals.ts';
 export * from './quiz/playback.ts';
+export * from './music/chords.ts';
+export * from './quiz/chords.ts';

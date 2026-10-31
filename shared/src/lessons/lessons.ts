@@ -1,8 +1,10 @@
 import type { PitchClass } from '../music/pitch.ts';
 import type { ModuleId } from '../quiz/types.ts';
 import type { IntervalsSpec } from '../quiz/intervals.ts';
+import type { ChordsSpec } from '../quiz/chords.ts';
 import notes from './data/notes.json' with { type: 'json' };
 import intervals from './data/intervals.json' with { type: 'json' };
+import chords from './data/chords.json' with { type: 'json' };
 
 export interface NotesSpec {
   module: 'notes';
@@ -10,7 +12,7 @@ export interface NotesSpec {
 }
 
 /** What a lesson or a free-practice session asks about. */
-export type QuizSpec = NotesSpec | IntervalsSpec;
+export type QuizSpec = NotesSpec | IntervalsSpec | ChordsSpec;
 
 export interface Lesson {
   id: string;
@@ -23,7 +25,7 @@ export interface Lesson {
 export const LESSONS: Record<ModuleId, Lesson[]> = {
   notes: notes as Lesson[],
   intervals: intervals as Lesson[],
-  chords: [],
+  chords: chords as Lesson[],
 };
 
 export function findLesson(id: string): Lesson | undefined {

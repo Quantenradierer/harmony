@@ -2,7 +2,7 @@
   import type { CategoryStats } from '@harmony/shared';
   import type { QuizController } from '../quiz/controller.ts';
   import { progress, settings } from '../stores.ts';
-  import { t } from '../i18n/index.ts';
+  import { t, language, yesNoQuestion } from '../i18n/index.ts';
   import AnswerButtons from './AnswerButtons.svelte';
   import ScoreBar from './ScoreBar.svelte';
   import AccuracyList from './AccuracyList.svelte';
@@ -31,6 +31,9 @@
         <button class="reference" onclick={() => quiz.replayReference()}>{$t('quiz.reference')}</button>
       {/if}
     </div>
+    {#if round.question.prompt.kind === 'yesno'}
+      <p class="prompt" data-testid="prompt">{yesNoQuestion($language, round.question.prompt.category)}</p>
+    {/if}
     <AnswerButtons {round} {label} onpick={(id) => quiz.answer(id)} />
     <p class="feedback" aria-live="polite">
       {#if round.done && round.outcome !== 'wrong'}
@@ -62,6 +65,12 @@
   }
   .replays button {
     flex: 1;
+  }
+  .prompt {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-align: center;
   }
   .feedback {
     min-height: 1.5em;

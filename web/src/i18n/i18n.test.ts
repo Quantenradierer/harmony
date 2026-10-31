@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { get } from 'svelte/store';
-import { catalogs, categoryLabel, t, translate } from './index.ts';
+import { catalogs, categoryLabel, t, translate, yesNoQuestion } from './index.ts';
 import { settings } from '../stores.ts';
 
 describe('i18n', () => {
@@ -27,5 +27,14 @@ describe('i18n', () => {
   it('labels note categories in the current language', () => {
     expect(categoryLabel('de', 'note:11')).toBe('H');
     expect(categoryLabel('en', 'note:11')).toBe('B');
+  });
+
+  it('localizes music terms', () => {
+    expect(categoryLabel('de', 'interval:P4')).toBe('Quarte');
+    expect(categoryLabel('en', 'interval:P4')).toBe('Perfect 4th');
+    expect(categoryLabel('de', 'chord:min')).toBe('Moll');
+    expect(categoryLabel('de', 'yes')).toBe('Ja');
+    expect(yesNoQuestion('en', 'chord:min')).toBe('Is this a minor chord?');
+    expect(yesNoQuestion('de', 'chord:min')).toBe('Ist das ein Mollakkord?');
   });
 });

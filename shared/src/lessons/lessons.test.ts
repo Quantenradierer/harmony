@@ -4,6 +4,7 @@ import { theoryCard } from './theory.ts';
 import { generateQuestion, specCategories } from '../quiz/generate.ts';
 import { INTERVAL_IDS } from '../music/intervals.ts';
 import type { IntervalsSpec } from '../quiz/intervals.ts';
+import type { ChordsSpec } from '../quiz/chords.ts';
 
 const all = Object.values(LESSONS).flat();
 
@@ -45,5 +46,25 @@ describe('lesson data', () => {
       expect(theoryCard(category, 'de'), category).toBeTruthy();
       expect(theoryCard(category, 'en'), category).toBeTruthy();
     }
+  });
+
+  it('introduces chord types in order: major/minor, dim/aug, sevenths', () => {
+    const order = LESSONS.chords.flatMap((l) => l.introduces ?? []);
+    expect(order).toEqual(['chord:maj', 'chord:min', 'chord:dim', 'chord:aug', 'chord:dom7', 'chord:maj7', 'chord:min7']);
+  });
+
+  it('asks yes/no in the first lesson of each new chord type, multiple choice later', () => {
+    for (const lesson of LESSONS.chords) {
+      const spec = lesson.spec as ChordsSpec;
+      if (lesson.introduces) expect(spec.format, lesson.id).toBe('yesno');
+    }
+    const formats = LESSONS.chords.map((l) => (l.spec as ChordsSpec).format);
+    expect(formats.at(-1)).toBe('choice');
+    expect(formats.filter((f) => f === 'choice').length).toBeGreaterThan(3);
+  });
+
+  it('has a few inversion lessons', () => {
+    const withInversions = LESSONS.chords.filter((l) => ((l.spec as ChordsSpec).inversions ?? [0]).some((i) => i > 0));
+    expect(withInversions.length).toBeGreaterThanOrEqual(2);
   });
 });

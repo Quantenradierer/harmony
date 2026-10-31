@@ -20,4 +20,10 @@ describe('free practice', () => {
     const q = generateQuestion(spec, () => 0);
     expect(q.choices).toEqual(['interval:m2', 'interval:TT']);
   });
+
+  it('offers all chord qualities as multiple choice', () => {
+    expect(practiceCategories('chords')).toHaveLength(7);
+    const spec = practiceSpec('chords', ['chord:dim', 'chord:maj7']);
+    expect(generateQuestion(spec, () => 0).choices).toEqual(['chord:dim', 'chord:maj7']);
+  });
 });

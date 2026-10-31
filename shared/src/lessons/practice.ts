@@ -1,6 +1,8 @@
 import type { ModuleId } from '../quiz/types.ts';
 import { noteId } from '../quiz/notes.ts';
 import { intervalCategory } from '../quiz/intervals.ts';
+import { chordCategory } from '../quiz/chords.ts';
+import { CHORD_IDS, type ChordId } from '../music/chords.ts';
 import { INTERVAL_IDS, type IntervalDirection, type IntervalId } from '../music/intervals.ts';
 import type { QuizSpec } from './lessons.ts';
 
@@ -16,8 +18,8 @@ export function practiceCategories(module: ModuleId): string[] {
       return Array.from({ length: 12 }, (_, pc) => noteId(pc));
     case 'intervals':
       return INTERVAL_IDS.map(intervalCategory);
-    default:
-      return [];
+    case 'chords':
+      return CHORD_IDS.map(chordCategory);
   }
 }
 
@@ -37,7 +39,7 @@ export function practiceSpec(
         intervals: values as IntervalId[],
         direction: options.direction ?? 'ascending',
       };
-    default:
-      throw new Error(`no practice for ${module}`);
+    case 'chords':
+      return { module: 'chords', chords: values as ChordId[], format: 'choice' };
   }
 }
