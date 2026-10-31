@@ -14,6 +14,7 @@ npm test          # unit tests in every workspace
 npm run check     # type checks
 npm run build     # build web and server
 npm start         # serve the built app on http://localhost:3000
+npm run test:e2e  # Playwright tests against the built app (run `npm run build` first)
 ```
 
 ## Docker
