@@ -12,8 +12,8 @@ describe('sampler', () => {
 });
 
 describe('instrument registry', () => {
-  it('offers synth, piano and harp', () => {
-    expect(INSTRUMENTS.map((i) => i.id)).toEqual(['synth', 'piano', 'harp']);
+  it('offers synth, piano, harp and bagpipe', () => {
+    expect(INSTRUMENTS.map((i) => i.id)).toEqual(['synth', 'piano', 'harp', 'bagpipe']);
   });
 
   it('falls back to the synth for unknown ids', () => {

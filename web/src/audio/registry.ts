@@ -33,6 +33,15 @@ export const INSTRUMENTS: InstrumentEntry[] = [
       release: 0.8,
     },
   },
+  {
+    id: 'bagpipe',
+    name: { de: 'Dudelsack', en: 'Bagpipe' },
+    samples: {
+      baseUrl: 'samples/bagpipe',
+      notes: [67, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79],
+      release: 0.15,
+    },
+  },
 ];
 
 export const DEFAULT_INSTRUMENT = 'synth';
