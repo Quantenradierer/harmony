@@ -11,11 +11,13 @@
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "dependencies": {
-    "@harmony/shared": "*"
+    "@harmony/shared": "*",
+    "idb": "^8.0.4"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^7.3.1",
     "@tsconfig/svelte": "^5.0.8",
+    "fake-indexeddb": "^6.2.7",
     "svelte": "^5.57.3",
     "svelte-check": "^4.7.7",
     "vite": "^8.3.5"

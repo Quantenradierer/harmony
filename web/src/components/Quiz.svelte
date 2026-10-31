@@ -1,12 +1,27 @@
 <script lang="ts">
+  import type { CategoryStats } from '@harmony/shared';
   import type { QuizController } from '../quiz/controller.ts';
-
   import AnswerButtons from './AnswerButtons.svelte';
+  import ScoreBar from './ScoreBar.svelte';
+  import AccuracyList from './AccuracyList.svelte';
 
-  let { quiz, label }: { quiz: QuizController; label: (id: string) => string } = $props();
+  let {
+    quiz,
+    label,
+    total,
+    categories,
+    stats,
+  }: {
+    quiz: QuizController;
+    label: (id: string) => string;
+    total: number;
+    categories: string[];
+    stats: Record<string, CategoryStats>;
+  } = $props();
   const quizState = $derived(quiz.state);
 </script>
 
+<ScoreBar session={$quizState.session.points} {total} gained={$quizState.gained} />
 {#if $quizState.round}
   <section class="quiz">
     <button class="replay" onclick={() => quiz.replay()}>Nochmal hören</button>
@@ -18,6 +33,7 @@
 {:else}
   <button class="primary start" onclick={() => quiz.next()}>Start</button>
 {/if}
+<AccuracyList {categories} {stats} {label} />
 
 <style>
   .quiz {

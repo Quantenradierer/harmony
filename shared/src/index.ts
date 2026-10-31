@@ -4,3 +4,5 @@ export * from './music/pitch.ts';
 export * from './quiz/types.ts';
 export * from './quiz/round.ts';
 export * from './quiz/notes.ts';
+export * from './progress/scoring.ts';
+export * from './progress/progress.ts';
