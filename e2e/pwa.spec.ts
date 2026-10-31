@@ -70,17 +70,15 @@ test('delivers feedback written offline after reconnecting', async ({ page, cont
   expect(entries.map((e) => e.text)).toContain(text);
 });
 
-test('offers a reload when a new version is deployed', async ({ page }) => {
+test('reloads automatically when a new version is deployed', async ({ page }) => {
   await page.goto('/');
   await waitForServiceWorker(page);
-  await expect(page.getByTestId('update-prompt')).toHaveCount(0);
 
   // "Deploy" a new version: any byte change to sw.js makes it a new worker.
+  const reloaded = page.waitForEvent('load');
   appendFileSync(join(STATIC_COPY, 'sw.js'), `\n// deployed ${Date.now()}\n`);
   await page.evaluate(async () => (await navigator.serviceWorker.getRegistration())!.update());
 
-  await expect(page.getByTestId('update-prompt')).toBeVisible();
-  await page.getByTestId('update-prompt').getByRole('button').first().click();
-  await page.waitForEvent('load');
-  await expect(page.getByTestId('update-prompt')).toHaveCount(0);
+  await reloaded;
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
 });

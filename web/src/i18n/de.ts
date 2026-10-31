@@ -129,7 +129,4 @@ export const de: Messages = {
   'feedback.queued': 'Du bist offline. Dein Feedback ist gespeichert und wird automatisch gesendet.',
   'feedback.pending': 'Noch nicht gesendet: {n}',
 
-  'update.available': 'Eine neue Version ist verfügbar.',
-  'update.reload': 'Neu laden',
-  'update.later': 'Später',
 };

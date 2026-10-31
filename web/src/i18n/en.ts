@@ -128,9 +128,6 @@ export const en = {
   'feedback.queued': 'You are offline. Your feedback is saved and will be sent automatically.',
   'feedback.pending': 'Waiting to be sent: {n}',
 
-  'update.available': 'A new version is available.',
-  'update.reload': 'Reload',
-  'update.later': 'Later',
 };
 
 export type MessageKey = keyof typeof en;

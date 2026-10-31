@@ -6,7 +6,6 @@
   import PracticeScreen from './screens/PracticeScreen.svelte';
   import SettingsScreen from './screens/SettingsScreen.svelte';
   import FeedbackScreen from './screens/FeedbackScreen.svelte';
-  import UpdatePrompt from './components/UpdatePrompt.svelte';
   import { settings } from './stores.ts';
   import { THEME_COLORS } from './settings.ts';
 
@@ -40,8 +39,6 @@
 {:else}
   <Home />
 {/if}
-
-<UpdatePrompt />
 
 <style>
   header {
