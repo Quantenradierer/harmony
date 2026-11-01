@@ -6,6 +6,14 @@ export const THEMES: Theme[] = ['sunny', 'calm', 'night'];
 /** Browser chrome color per theme. */
 export const THEME_COLORS: Record<Theme, string> = { sunny: '#d9602b', calm: '#3b5bdb', night: '#1d1723' };
 
+export interface Reminder {
+  enabled: boolean;
+  /** Local time, HH:MM. */
+  time: string;
+  /** Weekdays as Date#getDay numbers (0 = Sunday). */
+  days: number[];
+}
+
 export interface Settings {
   language: Language;
   theme: Theme;
@@ -18,6 +26,7 @@ export interface Settings {
   instrument: string;
   /** Lock each lesson until the one before it was passed. */
   lessonGating: boolean;
+  reminder: Reminder;
 }
 
 export function defaultSettings(): Settings {
@@ -29,5 +38,6 @@ export function defaultSettings(): Settings {
     playback: 'together',
     instrument: 'piano',
     lessonGating: false,
+    reminder: { enabled: false, time: '13:30', days: [0, 1, 2, 3, 4, 5, 6] },
   };
 }

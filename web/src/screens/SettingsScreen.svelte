@@ -5,6 +5,7 @@
   import { INSTRUMENTS } from '../audio/registry.ts';
   import { THEMES } from '../settings.ts';
   import BackupPanel from '../components/BackupPanel.svelte';
+  import ReminderPanel from '../components/ReminderPanel.svelte';
   import InstallPanel from '../components/InstallPanel.svelte';
 
   const MODULES: ModuleId[] = ['notes', 'intervals', 'chords'];
@@ -115,6 +116,7 @@
   </fieldset>
 {/each}
 
+<ReminderPanel />
 <InstallPanel />
 <BackupPanel />
 

@@ -8,11 +8,46 @@
   import FeedbackScreen from './screens/FeedbackScreen.svelte';
   import { settings } from './stores.ts';
   import { THEME_COLORS } from './settings.ts';
+  import { isReminderDue, dayKey } from './reminder.ts';
 
   $effect(() => {
     const theme = $settings.theme;
     document.documentElement.dataset.theme = theme;
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', THEME_COLORS[theme]);
+  });
+
+  // Reminder: checked while the app is open; a static web app has no server push.
+  $effect(() => {
+    const reminder = $settings.reminder;
+    if (!reminder.enabled) return;
+    const check = async () => {
+      if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
+      const now = new Date();
+      let last: string | undefined;
+      try {
+        last = localStorage.getItem('reminder-last') ?? undefined;
+      } catch {
+        // storage unavailable: worst case the reminder repeats
+      }
+      if (!isReminderDue(now, reminder, last)) return;
+      try {
+        localStorage.setItem('reminder-last', dayKey(now));
+      } catch {
+        // see above
+      }
+      const title = $t('reminder.notifyTitle');
+      const options = { body: $t('reminder.notifyBody'), icon: 'icon-192.png', tag: 'practice-reminder' };
+      const reg = await navigator.serviceWorker?.getRegistration();
+      if (reg) await reg.showNotification(title, options);
+      else new Notification(title, options);
+    };
+    void check();
+    const id = setInterval(check, 30_000);
+    document.addEventListener('visibilitychange', check);
+    return () => {
+      clearInterval(id);
+      document.removeEventListener('visibilitychange', check);
+    };
   });
 </script>
 
