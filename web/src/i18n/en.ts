@@ -102,6 +102,11 @@ export const en = {
   'language.de': 'Deutsch',
   'language.en': 'English',
 
+  'install.title': 'Install as app',
+  'install.hint': 'Harmony Trainer runs as an app on your home screen, even offline.',
+  'install.button': 'Install',
+  'install.manual': 'Android: browser menu ⋮ → “Install app” or “Add to Home screen”.',
+
   'backup.title': 'Back up progress',
   'backup.hint': 'Save scores, unlocked lessons and settings to a file, or restore them from one.',
   'backup.export': 'Export',

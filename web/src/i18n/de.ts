@@ -103,6 +103,11 @@ export const de: Messages = {
   'language.de': 'Deutsch',
   'language.en': 'English',
 
+  'install.title': 'Als App installieren',
+  'install.hint': 'Harmony Trainer läuft als App auf dem Startbildschirm, auch offline.',
+  'install.button': 'Installieren',
+  'install.manual': 'Android: Browsermenü ⋮ → „App installieren“ bzw. „Zum Startbildschirm hinzufügen“.',
+
   'backup.title': 'Fortschritt sichern',
   'backup.hint': 'Punkte, freigeschaltete Lektionen und Einstellungen in einer Datei speichern oder daraus wiederherstellen.',
   'backup.export': 'Exportieren',
