@@ -27,6 +27,8 @@ export interface Settings {
   /** Lock each lesson until the one before it was passed. */
   lessonGating: boolean;
   reminder: Reminder;
+  /** Name shown on the trophies page. */
+  playerName: string;
 }
 
 export function defaultSettings(): Settings {
@@ -39,5 +41,6 @@ export function defaultSettings(): Settings {
     instrument: 'piano',
     lessonGating: false,
     reminder: { enabled: false, time: '13:30', days: [0, 1, 2, 3, 4, 5, 6] },
+    playerName: '',
   };
 }

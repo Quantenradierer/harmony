@@ -26,6 +26,8 @@ export interface QuizResult {
   question: Question;
   outcome: Outcome;
   points: number;
+  /** Points of the running session after this question. */
+  sessionPoints: number;
 }
 
 export interface QuizDeps {
@@ -83,6 +85,11 @@ export class QuizController {
       gained: points,
       session: { points: this.current.session.points + points, streak },
     });
-    this.deps.onResult?.({ question: round.question, outcome: round.outcome, points });
+    this.deps.onResult?.({
+      question: round.question,
+      outcome: round.outcome,
+      points,
+      sessionPoints: this.current.session.points,
+    });
   }
 }

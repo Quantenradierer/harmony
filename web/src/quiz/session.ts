@@ -36,9 +36,9 @@ export function createSession(o: SessionOptions): QuizController {
       get(o.settings).referencePitch
         ? { events: [{ midi: REFERENCE_MIDI, time: 0, duration: 1 }] }
         : undefined,
-    onResult: ({ question, outcome, points }) =>
+    onResult: ({ question, outcome, points, sessionPoints }) =>
       o.progress.update((p) => {
-        let next = recordAnswer(p, { category: question.category, outcome, points });
+        let next = recordAnswer(p, { category: question.category, outcome, points, sessionPoints });
         if (o.lessonId) next = recordLessonResult(next, o.lessonId, outcome === 'first-try');
         return next;
       }),

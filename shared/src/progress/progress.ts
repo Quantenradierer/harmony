@@ -14,6 +14,8 @@ export interface Progress {
   lessonHistory: Record<string, boolean[]>;
   /** Ids of lessons whose gate was reached; the next lesson is unlocked. */
   passed: string[];
+  /** Highest points reached within one practice session (highscore). */
+  bestSession?: number;
 }
 
 export function emptyProgress(): Progress {
@@ -24,6 +26,8 @@ export interface AnswerRecord {
   category: string;
   outcome: Outcome;
   points: number;
+  /** Points of the running session after this answer. */
+  sessionPoints?: number;
 }
 
 export function recordAnswer(progress: Progress, answer: AnswerRecord): Progress {
@@ -31,6 +35,7 @@ export function recordAnswer(progress: Progress, answer: AnswerRecord): Progress
   return {
     ...progress,
     totalPoints: progress.totalPoints + answer.points,
+    bestSession: Math.max(progress.bestSession ?? 0, answer.sessionPoints ?? 0),
     categories: {
       ...progress.categories,
       [answer.category]: {

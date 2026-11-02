@@ -55,6 +55,7 @@ function validSettings(s: unknown): s is Partial<Settings> {
   if (s.playback !== undefined && s.playback !== 'together' && s.playback !== 'sequence') return false;
   if (s.instrument !== undefined && typeof s.instrument !== 'string') return false;
   if (s.lessonGating !== undefined && typeof s.lessonGating !== 'boolean') return false;
+  if (s.playerName !== undefined && typeof s.playerName !== 'string') return false;
   return true;
 }
 
