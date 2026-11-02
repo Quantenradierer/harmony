@@ -1,6 +1,6 @@
 import type { Language } from '@harmony/shared';
 import type { AudioOut, Instrument } from './instrument.ts';
-import { createSynth } from './synth.ts';
+import { createSynth, type Timbre } from './synth.ts';
 import { createSampler, type SampleSet } from './sampler.ts';
 
 export interface InstrumentEntry {
@@ -8,6 +8,8 @@ export interface InstrumentEntry {
   name: Record<Language, string>;
   /** Sampled instruments list their files; without samples the synth is used. */
   samples?: SampleSet;
+  /** Sound of the synthesised voice (only used without samples). */
+  timbre?: Timbre;
 }
 
 const range = (from: number, to: number, step: number) =>
@@ -42,6 +44,8 @@ export const INSTRUMENTS: InstrumentEntry[] = [
       release: 0.15,
     },
   },
+  { id: 'guitar', name: { de: 'Gitarre', en: 'Guitar' }, timbre: 'guitar' },
+  { id: 'accordion', name: { de: 'Akkordeon', en: 'Accordion' }, timbre: 'accordion' },
 ];
 
 export const DEFAULT_INSTRUMENT = 'synth';
@@ -51,5 +55,5 @@ export function findInstrument(id: string): InstrumentEntry {
 }
 
 export function createInstrument(entry: InstrumentEntry, out: AudioOut): Instrument {
-  return entry.samples ? createSampler(out, entry.samples) : createSynth(out);
+  return entry.samples ? createSampler(out, entry.samples) : createSynth(out, entry.timbre);
 }

@@ -1,10 +1,17 @@
 import type { Language, ModuleId, Playback, Register } from '@harmony/shared';
 
-export type Theme = 'sunny' | 'calm' | 'night';
-export const THEMES: Theme[] = ['sunny', 'calm', 'night'];
+export type Theme = 'sunny' | 'calm' | 'night' | 'medieval' | 'forest' | 'ocean';
+export const THEMES: Theme[] = ['sunny', 'calm', 'night', 'medieval', 'forest', 'ocean'];
 
 /** Browser chrome color per theme. */
-export const THEME_COLORS: Record<Theme, string> = { sunny: '#d9602b', calm: '#3b5bdb', night: '#1d1723' };
+export const THEME_COLORS: Record<Theme, string> = {
+  sunny: '#d9602b',
+  calm: '#3b5bdb',
+  night: '#1d1723',
+  medieval: '#7b1e24',
+  forest: '#2f5d3a',
+  ocean: '#0b3a5c',
+};
 
 export interface Reminder {
   enabled: boolean;

@@ -22,6 +22,43 @@
   --red: #c92a2a;
 }
 
+:root[data-theme='medieval'] {
+  color-scheme: light;
+  --bg: #e9d9b4;
+  --fg: #2e1f12;
+  --muted: #6e5a3c;
+  --surface: #f5e9cb;
+  --border: #b8985c;
+  --accent: #7b1e24;
+  --green: #3f6b2a;
+  --red: #a4161a;
+  font-family: 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
+}
+
+:root[data-theme='forest'] {
+  color-scheme: dark;
+  --bg: #16241b;
+  --fg: #e8f1e4;
+  --muted: #9bb39f;
+  --surface: #1f3226;
+  --border: #3b5a45;
+  --accent: #d98a1f;
+  --green: #6fd37f;
+  --red: #ff7b6b;
+}
+
+:root[data-theme='ocean'] {
+  color-scheme: dark;
+  --bg: #0b2236;
+  --fg: #e6f3fb;
+  --muted: #9ab8cc;
+  --surface: #133450;
+  --border: #2c5878;
+  --accent: #1fa2c9;
+  --green: #4fd18b;
+  --red: #ff7d7d;
+}
+
 :root,
 :root[data-theme='night'] {
   color-scheme: dark;
