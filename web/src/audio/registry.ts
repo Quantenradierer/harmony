@@ -44,8 +44,26 @@ export const INSTRUMENTS: InstrumentEntry[] = [
       release: 0.15,
     },
   },
-  { id: 'guitar', name: { de: 'Gitarre', en: 'Guitar' }, timbre: 'guitar' },
-  { id: 'accordion', name: { de: 'Akkordeon', en: 'Accordion' }, timbre: 'accordion' },
+  {
+    id: 'guitar',
+    name: { de: 'Gitarre', en: 'Guitar' },
+    samples: {
+      baseUrl: 'samples/guitar-classical',
+      notes: [40, 43, 45, 48, 52, 55, 58, 61, 64, 67, 70, 73, 76, 79, 82, 84],
+      release: 0.5,
+    },
+  },
+  {
+    id: 'accordion',
+    name: { de: 'Akkordeon', en: 'Accordion' },
+    samples: {
+      baseUrl: 'samples/accordion',
+      notes: [47, 50, 54, 55, 57, 59, 60, 62, 64, 66, 67, 69, 71, 72, 74, 76, 79],
+      release: 0.15,
+    },
+  },
+  { id: 'guitar-synth', name: { de: 'Gitarre (Synth)', en: 'Guitar (synth)' }, timbre: 'guitar' },
+  { id: 'accordion-synth', name: { de: 'Akkordeon (Synth)', en: 'Accordion (synth)' }, timbre: 'accordion' },
 ];
 
 export const DEFAULT_INSTRUMENT = 'synth';
