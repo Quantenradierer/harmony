@@ -3,6 +3,7 @@
   import { progress, settings } from '../stores.ts';
   import { t, label, language } from '../i18n/index.ts';
   import { href } from '../router.ts';
+  import type { MessageKey } from '../i18n/index.ts';
   import { createSession } from '../quiz/session.ts';
   import { submitRun } from '../leaderboard/submit.ts';
   import { player } from '../audio/setup.ts';
@@ -31,6 +32,7 @@
 {#if lesson && quiz && isUnlocked($progress, path, id, $settings.lessonGating)}
   <h2>{$t(`module.${lesson.spec.module}`)} · {$t('lesson.title', { n: index + 1 })}</h2>
   <p class="summary">{lessonSummary(lesson, $language)}</p>
+  <p class="desc">{$t(`lesson.desc.${lesson.id}` as MessageKey)}</p>
   <TheoryCards categories={lesson.introduces ?? []} />
   <p class="goal">
     <span data-testid="lesson-progress"
@@ -52,6 +54,10 @@
 <style>
   .summary {
     margin: 0;
+  }
+  .desc {
+    margin: 0;
+    color: var(--muted);
   }
   .goal {
     margin: 0;

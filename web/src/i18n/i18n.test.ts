@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { get } from 'svelte/store';
 import { catalogs, categoryLabel, t, translate, yesNoQuestion } from './index.ts';
 import { settings } from '../stores.ts';
+import { LESSONS } from '@harmony/shared';
 
 describe('i18n', () => {
   it('has the same keys in every language, none empty', () => {
@@ -9,6 +10,12 @@ describe('i18n', () => {
     expect(Object.keys(catalogs.de).sort()).toEqual(keys);
     for (const cat of Object.values(catalogs)) {
       for (const v of Object.values(cat)) expect(v.trim()).not.toBe('');
+    }
+  });
+
+  it('describes every lesson', () => {
+    for (const l of Object.values(LESSONS).flat()) {
+      expect(Object.keys(catalogs.en)).toContain(`lesson.desc.${l.id}`);
     }
   });
 

@@ -4,6 +4,7 @@
   import { t, language } from '../i18n/index.ts';
   import { lessonSummary } from '../lessons.ts';
   import { href } from '../router.ts';
+  import type { MessageKey } from '../i18n/index.ts';
 
   const MODULES: ModuleId[] = ['notes', 'intervals', 'chords'];
 </script>
@@ -20,6 +21,7 @@
             <a class="lesson" class:passed href={href({ name: 'lesson', id: lesson.id })} data-lesson={lesson.id}>
               <strong>{$t('lesson.title', { n: i + 1 })}</strong>
               <span>{lessonSummary(lesson, $language)}</span>
+              <small>{$t(`lesson.desc.${lesson.id}` as MessageKey)}</small>
               {#if passed}<em>✓ {$t('home.passed')}</em>{/if}
             </a>
           {:else}
@@ -64,6 +66,10 @@
     text-decoration: none;
   }
   .lesson span {
+    color: var(--muted);
+  }
+  .lesson small {
+    flex-basis: 100%;
     color: var(--muted);
   }
   .lesson em {
