@@ -5,6 +5,7 @@ import {
   scoreAnswer,
   type Outcome,
   type Question,
+  QUIZ_LENGTH,
   type Round,
   type Sound,
 } from '@harmony/shared';
@@ -18,6 +19,10 @@ export interface SessionScore {
 export interface QuizState {
   round?: Round;
   session: SessionScore;
+  /** Questions finished in this training. */
+  answered: number;
+  /** The last question of the training was answered. */
+  finished: boolean;
   /** Points gained by the last finished round. */
   gained?: number;
 }
@@ -37,13 +42,19 @@ export interface QuizDeps {
   reference?: () => Sound | undefined;
   /** Called once per finished question, e.g. to persist progress. */
   onResult?: (result: QuizResult) => void;
+  /** Questions per training; defaults to QUIZ_LENGTH. */
+  length?: number;
+  /** Called once when the last question of a training is answered. */
+  onFinish?: (result: { points: number }) => void;
 }
+
+const START: QuizState = { session: { points: 0, streak: 0 }, answered: 0, finished: false };
 
 /** Drives the quiz loop: new question, play, answer, replay, score. */
 export class QuizController {
-  private store = writable<QuizState>({ session: { points: 0, streak: 0 } });
+  private store = writable<QuizState>(START);
   readonly state: Readable<QuizState> = this.store;
-  private current: QuizState = { session: { points: 0, streak: 0 } };
+  private current: QuizState = START;
 
   constructor(private deps: QuizDeps) {}
 
@@ -52,7 +63,15 @@ export class QuizController {
     this.store.set(this.current);
   }
 
+  /** Starts a fresh training with a new score. */
+  async restart(): Promise<void> {
+    this.current = START;
+    this.store.set(START);
+    await this.next();
+  }
+
   async next(): Promise<void> {
+    if (this.current.finished) return;
     const round = createRound(this.deps.nextQuestion());
     this.update({ round, gained: undefined });
     const reference = this.deps.reference?.();
@@ -80,10 +99,14 @@ export class QuizController {
       return;
     }
     const { points, streak } = scoreAnswer(this.current.session.streak, round.outcome);
+    const answered = this.current.answered + 1;
+    const finished = answered >= (this.deps.length ?? QUIZ_LENGTH);
     this.update({
       round,
       gained: points,
       session: { points: this.current.session.points + points, streak },
+      answered,
+      finished,
     });
     this.deps.onResult?.({
       question: round.question,
@@ -91,5 +114,6 @@ export class QuizController {
       points,
       sessionPoints: this.current.session.points,
     });
+    if (finished) this.deps.onFinish?.({ points: this.current.session.points });
   }
 }

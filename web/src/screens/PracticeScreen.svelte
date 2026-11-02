@@ -9,6 +9,7 @@
   import { progress, settings } from '../stores.ts';
   import { t, label } from '../i18n/index.ts';
   import { createSession } from '../quiz/session.ts';
+  import { submitRun } from '../leaderboard/submit.ts';
   import { player } from '../audio/setup.ts';
   import Quiz from '../components/Quiz.svelte';
   import type { QuizController } from '../quiz/controller.ts';
@@ -31,7 +32,7 @@
 
   function start() {
     chosen = all.filter((c) => selected.includes(c));
-    quiz = createSession({ spec: practiceSpec(module, chosen, { direction }), progress, player, settings });
+    quiz = createSession({ spec: practiceSpec(module, chosen, { direction }), progress, player, settings, onFinish: submitRun });
   }
 </script>
 

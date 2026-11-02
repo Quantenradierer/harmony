@@ -2,6 +2,7 @@
   import { LANGUAGES, REGISTERS, type ModuleId } from '@harmony/shared';
   import { settings } from '../stores.ts';
   import { t, language } from '../i18n/index.ts';
+  import { renamePlayer } from '../leaderboard/submit.ts';
   import { INSTRUMENTS } from '../audio/registry.ts';
   import { THEMES } from '../settings.ts';
   import BackupPanel from '../components/BackupPanel.svelte';
@@ -26,6 +27,19 @@
     {/each}
   </div>
 </fieldset>
+
+<label class="name">
+  <span>{$t('settings.name')}</span>
+  <input
+    type="text"
+    maxlength="30"
+    placeholder={$t('settings.namePlaceholder')}
+    bind:value={$settings.playerName}
+    onchange={() => void renamePlayer()}
+    data-testid="player-name"
+  />
+  <span class="hint">{$t('settings.nameHint')}</span>
+</label>
 
 <fieldset>
   <legend>{$t('settings.theme')}</legend>
@@ -121,6 +135,16 @@
 <BackupPanel />
 
 <style>
+  .name {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  input {
+    min-height: 3rem;
+    padding: 0 0.75rem;
+    font: inherit;
+  }
   .hint {
     margin: 0 0 0.5rem;
     color: var(--muted);

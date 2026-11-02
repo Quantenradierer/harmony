@@ -20,3 +20,4 @@ export * from './quiz/playback.ts';
 export * from './music/chords.ts';
 export * from './quiz/chords.ts';
 export * from './api/feedback.ts';
+export * from './api/leaderboard.ts';

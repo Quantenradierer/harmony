@@ -27,8 +27,10 @@ export interface Settings {
   /** Lock each lesson until the one before it was passed. */
   lessonGating: boolean;
   reminder: Reminder;
-  /** Name shown on the trophies page. */
+  /** Name shown on the leaderboard. */
   playerName: string;
+  /** Random id that ties leaderboard entries to this player; created on first use. */
+  playerId: string;
 }
 
 export function defaultSettings(): Settings {
@@ -42,5 +44,6 @@ export function defaultSettings(): Settings {
     lessonGating: false,
     reminder: { enabled: false, time: '13:30', days: [0, 1, 2, 3, 4, 5, 6] },
     playerName: '',
+    playerId: '',
   };
 }

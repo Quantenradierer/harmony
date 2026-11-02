@@ -56,6 +56,7 @@ function validSettings(s: unknown): s is Partial<Settings> {
   if (s.instrument !== undefined && typeof s.instrument !== 'string') return false;
   if (s.lessonGating !== undefined && typeof s.lessonGating !== 'boolean') return false;
   if (s.playerName !== undefined && typeof s.playerName !== 'string') return false;
+  if (s.playerId !== undefined && typeof s.playerId !== 'string') return false;
   return true;
 }
 

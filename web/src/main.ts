@@ -1,13 +1,14 @@
 import { mount } from 'svelte';
 import { registerSW } from 'virtual:pwa-register';
 import App from './App.svelte';
-import { feedbackQueue, initStores } from './stores.ts';
+import { feedbackQueue, initStores, scoreQueue } from './stores.ts';
 import './app.css';
 
 await initStores();
-// Deliver feedback written while offline.
-void feedbackQueue.flush();
-addEventListener('online', () => void feedbackQueue.flush());
+// Deliver feedback and scores collected while offline.
+const flushQueues = () => void Promise.all([feedbackQueue.flush(), scoreQueue.flush()]);
+flushQueues();
+addEventListener('online', flushQueues);
 mount(App, { target: document.getElementById('app')! });
 
 // autoUpdate: a new version activates and reloads the app on its own.

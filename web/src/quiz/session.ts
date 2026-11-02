@@ -20,6 +20,8 @@ export interface SessionOptions {
   /** Set for lessons; free practice does not count towards gates. */
   lessonId?: string;
   rng?: Rng;
+  /** Called with the final score when the training's last question is answered. */
+  onFinish?: (result: { points: number }) => void;
 }
 
 /** A quiz whose results are written to the learner's progress. */
@@ -32,6 +34,7 @@ export function createSession(o: SessionOptions): QuizController {
         playback: get(o.settings).playback,
       }),
     player: o.player,
+    onFinish: o.onFinish,
     reference: () =>
       get(o.settings).referencePitch
         ? { events: [{ midi: REFERENCE_MIDI, time: 0, duration: 1 }] }

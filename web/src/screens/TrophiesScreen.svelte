@@ -11,6 +11,8 @@
   } from '@harmony/shared';
   import { progress, settings } from '../stores.ts';
   import { t, language, categoryLabel } from '../i18n/index.ts';
+  import { href } from '../router.ts';
+  import { fetchLeaderboard } from '../leaderboard/client.ts';
 
   const MODULES: ModuleId[] = ['notes', 'intervals', 'chords'];
   const ICON: Record<Medal, string> = { gold: '🥇', silver: '🥈', bronze: '🥉' };
@@ -22,24 +24,41 @@
   );
   const total = $derived($progress.totalPoints);
   const overall = $derived(pointsMedal(total));
+  const board = fetchLeaderboard();
   const lessonCount = $derived(Object.values(LESSONS).flat().length);
 </script>
 
 <h2>{$t('trophies.title')}</h2>
 
-<label class="name">
-  <span>{$t('trophies.name')}</span>
-  <input
-    type="text"
-    maxlength="30"
-    placeholder={$t('trophies.namePlaceholder')}
-    bind:value={$settings.playerName}
-    data-testid="player-name"
-  />
-</label>
+<section>
+  <h3>{$t('leaderboard.title')}</h3>
+  <p class="hint">{$t('leaderboard.hint')}</p>
+  {#await board}
+    <p class="hint">…</p>
+  {:then entries}
+    {#if !entries}
+      <p>{$t('leaderboard.error')}</p>
+    {:else if entries.length === 0}
+      <p>{$t('leaderboard.empty')}</p>
+    {:else}
+      <ol class="board" data-testid="leaderboard">
+        {#each entries as e, i (i)}
+          <li class:me={e.name === $settings.playerName.trim()}>
+            <span class="place">{i < 3 ? ['🥇', '🥈', '🥉'][i] : `${i + 1}.`}</span>
+            <span class="who">{e.name}</span>
+            <strong class="pts">{e.score}</strong>
+          </li>
+        {/each}
+      </ol>
+    {/if}
+  {/await}
+</section>
 
 <section class="card" data-testid="player-card">
   <h3>{$settings.playerName.trim() || $t('trophies.anonymous')} {overall ? ICON[overall] : ''}</h3>
+  {#if !$settings.playerName.trim()}
+    <p class="hint"><a href={href({ name: 'settings' })}>{$t('result.noName')}</a></p>
+  {/if}
   <ul>
     <li>{$t('score.total')}: <strong>{total}</strong></li>
     <li>{$t('trophies.highscore')}: <strong data-testid="highscore">{$progress.bestSession ?? 0}</strong></li>
@@ -75,15 +94,26 @@
 </section>
 
 <style>
-  .name {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
+  .board {
+    list-style: none;
+    padding: 0;
+    margin: 0;
   }
-  input {
-    min-height: 3rem;
-    padding: 0 0.75rem;
-    font: inherit;
+  .board li {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .board .me {
+    font-weight: 600;
+  }
+  .place {
+    min-width: 2rem;
+  }
+  .who {
+    flex: 1;
+    overflow-wrap: anywhere;
   }
   .card {
     padding: 0.75rem 1rem;

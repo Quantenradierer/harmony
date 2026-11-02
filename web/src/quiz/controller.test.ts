@@ -72,4 +72,50 @@ describe('quiz controller', () => {
     await quiz.next();
     expect(instrument.played.map((p) => p.midi)).toEqual([60, 67, 67, 60, 67]);
   });
+
+  describe('training length', () => {
+    function finishing() {
+      const player = new Player({ instrument: async () => new FakeInstrument(), now: () => 0 });
+      const finished: number[] = [];
+      const quiz = new QuizController({
+        nextQuestion: () => generateNoteQuestion({ pitchClasses: [0, 7] }, () => 0),
+        player,
+        onFinish: ({ points }) => finished.push(points),
+      });
+      return { quiz, finished };
+    }
+
+    async function answerAll(quiz: QuizController, n: number) {
+      for (let i = 0; i < n; i++) {
+        await quiz.next();
+        quiz.answer('note:0');
+      }
+    }
+
+    it('ends after 20 questions and reports the score once', async () => {
+      const { quiz, finished } = finishing();
+      await answerAll(quiz, 19);
+      expect(get(quiz.state).finished).toBe(false);
+      expect(finished).toEqual([]);
+      await answerAll(quiz, 1);
+      expect(get(quiz.state).finished).toBe(true);
+      expect(finished).toEqual([285]);
+      // Nothing more happens after the end.
+      await quiz.next();
+      quiz.answer('note:0');
+      expect(finished).toEqual([285]);
+      expect(get(quiz.state).answered).toBe(20);
+    });
+
+    it('restart begins a new training with a fresh score', async () => {
+      const { quiz, finished } = finishing();
+      await answerAll(quiz, 20);
+      await quiz.restart();
+      expect(get(quiz.state)).toMatchObject({ finished: false, answered: 0, session: { points: 0, streak: 0 } });
+      quiz.answer('note:0');
+      expect(get(quiz.state).session.points).toBe(10);
+      await answerAll(quiz, 19);
+      expect(finished).toEqual([285, 285]);
+    });
+  });
 });

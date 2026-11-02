@@ -3,17 +3,32 @@ import { Hono, type Context } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import { serveStatic } from '@hono/node-server/serve-static';
 import { getConnInfo } from '@hono/node-server/conninfo';
-import { APP_NAME, FEEDBACK_PATH, validateFeedback, type ApiError } from '@harmony/shared';
+import {
+  APP_NAME,
+  FEEDBACK_PATH,
+  LEADERBOARD_PATH,
+  LEADERBOARD_SIZE,
+  PLAYER_PATH,
+  SCORES_PATH,
+  validateFeedback,
+  validatePlayer,
+  validateScore,
+  type ApiError,
+  type ScoreCreated,
+} from '@harmony/shared';
 import type { FeedbackStore } from './feedback-store.ts';
+import type { LeaderboardStore } from './leaderboard-store.ts';
 import { RateLimiter } from './rate-limit.ts';
 
 /** Assumed limits; see docs/open-assumptions.md. */
 export const FEEDBACK_RATE_LIMIT = { posts: 5, windowMs: 60_000 };
+export const SCORE_RATE_LIMIT = { posts: 20, windowMs: 60_000 };
 
 export interface AppOptions {
   /** Directory holding the built PWA; omit to serve the API only. */
   staticDir?: string;
   feedback?: FeedbackStore;
+  leaderboard?: LeaderboardStore;
   /** Bearer token for reading feedback; reading is disabled when empty. */
   feedbackToken?: string;
   now?: () => Date;
@@ -44,14 +59,17 @@ export function createApp(options: AppOptions = {}): Hono {
   const app = new Hono();
   const now = options.now ?? (() => new Date());
   const limiter = new RateLimiter(FEEDBACK_RATE_LIMIT.posts, FEEDBACK_RATE_LIMIT.windowMs, () => now().getTime());
+  const scoreLimiter = new RateLimiter(SCORE_RATE_LIMIT.posts, SCORE_RATE_LIMIT.windowMs, () => now().getTime());
   const error = (c: Context, status: 400 | 401 | 413 | 429, code: ApiError['error']) =>
     c.json<ApiError>({ error: code }, status);
 
   const feedback = options.feedback;
+  const leaderboard = options.leaderboard;
 
   app.get('/api/health', (c) => {
     try {
       feedback?.ping();
+      leaderboard?.ping();
     } catch {
       return c.json({ ok: false, app: APP_NAME }, 503);
     }
@@ -77,6 +95,27 @@ export function createApp(options: AppOptions = {}): Hono {
       }
       return c.json(feedback.list());
     });
+  }
+
+  if (leaderboard) {
+    const small = bodyLimit({ maxSize: 1024, onError: (c) => error(c, 413, 'too-long') });
+
+    app.post(SCORES_PATH, small, async (c) => {
+      if (!scoreLimiter.allow(clientIp(c))) return error(c, 429, 'rate-limited');
+      const result = validateScore(await c.req.json().catch(() => null));
+      if ('error' in result) return error(c, 400, result.error);
+      return c.json<ScoreCreated>(leaderboard.add(result, now()), 201);
+    });
+
+    app.put(PLAYER_PATH, small, async (c) => {
+      if (!scoreLimiter.allow(clientIp(c))) return error(c, 429, 'rate-limited');
+      const result = validatePlayer(await c.req.json().catch(() => null));
+      if ('error' in result) return error(c, 400, result.error);
+      leaderboard.rename(result.uuid, result.name);
+      return c.body(null, 204);
+    });
+
+    app.get(LEADERBOARD_PATH, (c) => c.json(leaderboard.list(LEADERBOARD_SIZE)));
   }
 
   app.all('/api/*', (c) => c.json({ error: 'not-found' }, 404));

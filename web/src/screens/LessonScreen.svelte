@@ -4,6 +4,7 @@
   import { t, label, language } from '../i18n/index.ts';
   import { href } from '../router.ts';
   import { createSession } from '../quiz/session.ts';
+  import { submitRun } from '../leaderboard/submit.ts';
   import { player } from '../audio/setup.ts';
   import Quiz from '../components/Quiz.svelte';
   import TheoryCards from '../components/TheoryCards.svelte';
@@ -19,7 +20,7 @@
   const path = lesson ? LESSONS[lesson.spec.module] : [];
   const index = path.findIndex((l) => l.id === id);
   const nextLesson = path[index + 1];
-  const quiz = lesson ? createSession({ spec: lesson.spec, lessonId: id, progress, player, settings }) : undefined;
+  const quiz = lesson ? createSession({ spec: lesson.spec, lessonId: id, progress, player, settings, onFinish: submitRun }) : undefined;
   const passedBefore = $progress.passed.includes(id);
 
   const score = $derived(lessonScore($progress.lessonHistory[id] ?? []));

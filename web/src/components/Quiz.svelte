@@ -7,6 +7,8 @@
   import AnswerButtons from './AnswerButtons.svelte';
   import ScoreBar from './ScoreBar.svelte';
   import AccuracyList from './AccuracyList.svelte';
+  import { runResult } from '../leaderboard/submit.ts';
+  import { href } from '../router.ts';
 
   let {
     quiz,
@@ -50,7 +52,27 @@
         {$t('quiz.tryAgain')}
       {/if}
     </p>
-    {#if round.done}
+    {#if round.done && $quizState.finished}
+      <div class="result" data-testid="run-result">
+        <h3>{$t('result.title', { n: $quizState.answered })}</h3>
+        <p class="points">{$t('result.score')}: <strong data-testid="run-score">{$quizState.session.points}</strong></p>
+        <p data-testid="run-status">
+          {#if $runResult?.status === 'sent'}
+            {$t('result.rank', { rank: $runResult.rank })}
+          {:else if $runResult?.status === 'queued'}
+            {$t('result.queued')}
+          {:else if $runResult?.status === 'failed'}
+            {$t('result.failed')}
+          {:else if $runResult?.status === 'no-name'}
+            {$t('result.noName')} <a href={href({ name: 'settings' })}>{$t('nav.settings')}</a>
+          {:else}
+            {$t('result.sending')}
+          {/if}
+        </p>
+        <button class="primary again" onclick={() => quiz.restart().catch(() => {})}>{$t('result.again')}</button>
+        <a href={href({ name: 'trophies' })}>{$t('result.board')}</a>
+      </div>
+    {:else if round.done}
       <button class="primary next" onclick={() => quiz.next().catch(() => {})}>{$t('quiz.next')}</button>
     {/if}
   </section>
@@ -71,6 +93,22 @@
   }
   .replays button {
     flex: 1;
+  }
+  .result {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    background: var(--surface);
+  }
+  .result h3,
+  .result p {
+    margin: 0;
+  }
+  .points {
+    font-size: 1.2rem;
   }
   .status {
     margin: 0;
