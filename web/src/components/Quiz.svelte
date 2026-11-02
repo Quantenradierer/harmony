@@ -59,6 +59,7 @@
         <p data-testid="run-status">
           {#if $runResult?.status === 'sent'}
             {$t('result.rank', { rank: $runResult.rank })}
+            {$t('result.total', { total: $runResult.total, totalRank: $runResult.totalRank })}
           {:else if $runResult?.status === 'queued'}
             {$t('result.queued')}
           {:else if $runResult?.status === 'failed'}

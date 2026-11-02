@@ -5,11 +5,13 @@ import { serveStatic } from '@hono/node-server/serve-static';
 import { getConnInfo } from '@hono/node-server/conninfo';
 import {
   APP_NAME,
+  BOARD_PARAM,
   FEEDBACK_PATH,
   LEADERBOARD_PATH,
   LEADERBOARD_SIZE,
   PLAYER_PATH,
   SCORES_PATH,
+  isBoard,
   validateFeedback,
   validatePlayer,
   validateScore,
@@ -115,7 +117,12 @@ export function createApp(options: AppOptions = {}): Hono {
       return c.body(null, 204);
     });
 
-    app.get(LEADERBOARD_PATH, (c) => c.json(leaderboard.list(LEADERBOARD_SIZE)));
+    app.get(LEADERBOARD_PATH, (c) => {
+      const board = c.req.query(BOARD_PARAM);
+      if (board === undefined) return c.json(leaderboard.listTotal(LEADERBOARD_SIZE));
+      if (!isBoard(board)) return error(c, 400, 'invalid');
+      return c.json(leaderboard.listBoard(board, LEADERBOARD_SIZE));
+    });
   }
 
   app.all('/api/*', (c) => c.json({ error: 'not-found' }, 404));

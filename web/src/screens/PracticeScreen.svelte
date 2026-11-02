@@ -1,6 +1,7 @@
 <script lang="ts">
   import {
     INTERVAL_DIRECTIONS,
+    practiceBoard,
     practiceCategories,
     practiceSpec,
     type IntervalDirection,
@@ -11,6 +12,7 @@
   import { createSession } from '../quiz/session.ts';
   import { submitRun } from '../leaderboard/submit.ts';
   import { player } from '../audio/setup.ts';
+  import Leaderboard from '../components/Leaderboard.svelte';
   import Quiz from '../components/Quiz.svelte';
   import type { QuizController } from '../quiz/controller.ts';
 
@@ -32,7 +34,7 @@
 
   function start() {
     chosen = all.filter((c) => selected.includes(c));
-    quiz = createSession({ spec: practiceSpec(module, chosen, { direction }), progress, player, settings, onFinish: submitRun });
+    quiz = createSession({ spec: practiceSpec(module, chosen, { direction }), progress, player, settings, onFinish: (r) => submitRun(r, practiceBoard(module)) });
   }
 </script>
 
@@ -41,6 +43,7 @@
 {#if quiz}
   <Quiz {quiz} categories={chosen} stats={$progress.categories} label={$label} />
   <button onclick={() => (quiz = undefined)}>{$t('practice.change')}</button>
+  <Leaderboard board={practiceBoard(module)} title={$t('leaderboard.practice')} />
 {:else}
   <p>{$t('practice.pick')}</p>
   <div class="chips">

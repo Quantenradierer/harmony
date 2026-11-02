@@ -1,4 +1,5 @@
 import {
+  BOARD_PARAM,
   LEADERBOARD_PATH,
   PLAYER_PATH,
   SCORES_PATH,
@@ -9,7 +10,7 @@ import {
 } from '@harmony/shared';
 
 export type ScoreResult =
-  | { status: 'sent'; rank: number }
+  | ({ status: 'sent' } & ScoreCreated)
   | { status: 'rejected' | 'rate-limited' | 'network' };
 
 const JSON_HEADERS = { 'content-type': 'application/json' };
@@ -18,7 +19,7 @@ const JSON_HEADERS = { 'content-type': 'application/json' };
 export async function postScore(score: ScoreRequest, fetchFn: typeof fetch = fetch): Promise<ScoreResult> {
   try {
     const res = await fetchFn(SCORES_PATH, { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify(score) });
-    if (res.ok) return { status: 'sent', rank: ((await res.json()) as ScoreCreated).rank };
+    if (res.ok) return { status: 'sent', ...((await res.json()) as ScoreCreated) };
     if (res.status === 429) return { status: 'rate-limited' };
     if (res.status >= 500) return { status: 'network' };
     return { status: 'rejected' };
@@ -37,10 +38,13 @@ export async function putPlayerName(player: PlayerRequest, fetchFn: typeof fetch
   }
 }
 
-/** The board, or undefined if it cannot be loaded. */
-export async function fetchLeaderboard(fetchFn: typeof fetch = fetch): Promise<LeaderboardEntry[] | undefined> {
+/** A board (a lesson id or `practice-<module>`), or the global one; undefined if it cannot be loaded. */
+export async function fetchLeaderboard(
+  board?: string,
+  fetchFn: typeof fetch = fetch,
+): Promise<LeaderboardEntry[] | undefined> {
   try {
-    const res = await fetchFn(LEADERBOARD_PATH);
+    const res = await fetchFn(board ? `${LEADERBOARD_PATH}?${BOARD_PARAM}=${encodeURIComponent(board)}` : LEADERBOARD_PATH);
     return res.ok ? ((await res.json()) as LeaderboardEntry[]) : undefined;
   } catch {
     return undefined;

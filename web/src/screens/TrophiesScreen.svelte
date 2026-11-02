@@ -12,7 +12,7 @@
   import { progress, settings } from '../stores.ts';
   import { t, language, categoryLabel } from '../i18n/index.ts';
   import { href } from '../router.ts';
-  import { fetchLeaderboard } from '../leaderboard/client.ts';
+  import Leaderboard from '../components/Leaderboard.svelte';
 
   const MODULES: ModuleId[] = ['notes', 'intervals', 'chords'];
   const ICON: Record<Medal, string> = { gold: '🥇', silver: '🥈', bronze: '🥉' };
@@ -24,35 +24,13 @@
   );
   const total = $derived($progress.totalPoints);
   const overall = $derived(pointsMedal(total));
-  const board = fetchLeaderboard();
   const lessonCount = $derived(Object.values(LESSONS).flat().length);
 </script>
 
 <h2>{$t('trophies.title')}</h2>
 
-<section>
-  <h3>{$t('leaderboard.title')}</h3>
-  <p class="hint">{$t('leaderboard.hint')}</p>
-  {#await board}
-    <p class="hint">…</p>
-  {:then entries}
-    {#if !entries}
-      <p>{$t('leaderboard.error')}</p>
-    {:else if entries.length === 0}
-      <p>{$t('leaderboard.empty')}</p>
-    {:else}
-      <ol class="board" data-testid="leaderboard">
-        {#each entries as e, i (i)}
-          <li class:me={e.name === $settings.playerName.trim()}>
-            <span class="place">{i < 3 ? ['🥇', '🥈', '🥉'][i] : `${i + 1}.`}</span>
-            <span class="who">{e.name}</span>
-            <strong class="pts">{e.score}</strong>
-          </li>
-        {/each}
-      </ol>
-    {/if}
-  {/await}
-</section>
+<Leaderboard title={$t('leaderboard.title')} />
+<p class="hint">{$t('leaderboard.hint')}</p>
 
 <section class="card" data-testid="player-card">
   <h3>{$settings.playerName.trim() || $t('trophies.anonymous')} {overall ? ICON[overall] : ''}</h3>
@@ -94,27 +72,6 @@
 </section>
 
 <style>
-  .board {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .board li {
-    display: flex;
-    gap: 0.75rem;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .board .me {
-    font-weight: 600;
-  }
-  .place {
-    min-width: 2rem;
-  }
-  .who {
-    flex: 1;
-    overflow-wrap: anywhere;
-  }
   .card {
     padding: 0.75rem 1rem;
     border: 1px solid var(--border);

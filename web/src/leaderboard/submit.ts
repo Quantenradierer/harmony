@@ -1,10 +1,11 @@
 import { get, writable } from 'svelte/store';
+import type { ScoreCreated } from '@harmony/shared';
 import { scoreQueue, settings } from '../stores.ts';
 import { putPlayerName } from './client.ts';
 
 export type RunResult =
   | { status: 'sending' | 'queued' | 'failed' | 'no-name' }
-  | { status: 'sent'; rank: number };
+  | ({ status: 'sent' } & ScoreCreated);
 
 /** What happened to the score of the training that just ended. */
 export const runResult = writable<RunResult | undefined>();
@@ -18,15 +19,15 @@ function playerId(): string {
   return id;
 }
 
-/** Sends the final score of a training to the leaderboard. */
-export async function submitRun({ points }: { points: number }): Promise<void> {
+/** Sends the final score of a training on a board (lesson id or `practice-<module>`). */
+export async function submitRun({ points }: { points: number }, board: string): Promise<void> {
   const name = get(settings).playerName.trim();
   if (!name) {
     runResult.set({ status: 'no-name' });
     return;
   }
   runResult.set({ status: 'sending' });
-  const result = await scoreQueue.submit({ uuid: playerId(), runId: crypto.randomUUID(), name, score: points });
+  const result = await scoreQueue.submit({ uuid: playerId(), board, runId: crypto.randomUUID(), name, score: points });
   runResult.set(
     result.status === 'sent'
       ? result

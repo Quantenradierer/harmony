@@ -1,4 +1,6 @@
 import { POINTS_FIRST_TRY, STREAK_BONUS_MAX } from '../progress/scoring.ts';
+import { LESSONS, findLesson } from '../lessons/lessons.ts';
+import type { ModuleId } from '../quiz/types.ts';
 import type { ApiError } from './feedback.ts';
 
 /** A training ends after this many questions and its score goes to the leaderboard. */
@@ -13,20 +15,43 @@ export const MAX_SCORE = Array.from({ length: QUIZ_LENGTH }, (_, i) => POINTS_FI
 export const SCORES_PATH = '/api/scores';
 export const PLAYER_PATH = '/api/player';
 export const LEADERBOARD_PATH = '/api/leaderboard';
+/** Query parameter selecting a board; omit it for the global board. */
+export const BOARD_PARAM = 'board';
 export const PLAYER_NAME_MAX_LENGTH = 30;
 export const LEADERBOARD_SIZE = 25;
+
+const MODULE_IDS = Object.keys(LESSONS) as ModuleId[];
+
+/** Board of a lesson (its id) or of free practice of a module. */
+export function practiceBoard(module: ModuleId): string {
+  return `practice-${module}`;
+}
+
+export function isBoard(value: unknown): value is string {
+  return (
+    typeof value === 'string' &&
+    (findLesson(value) !== undefined || MODULE_IDS.some((m) => practiceBoard(m) === value))
+  );
+}
 
 /** POST /api/scores body. `uuid` identifies the player, `runId` the training (makes retries harmless). */
 export interface ScoreRequest {
   uuid: string;
+  /** Board the score belongs to: a lesson id or `practice-<module>`. */
+  board: string;
   runId: string;
   name: string;
   score: number;
 }
 
-/** POST /api/scores response (201): place of the score on the board. */
+/** POST /api/scores response (201): the player's place on that board and overall. */
 export interface ScoreCreated {
+  /** Place on the board by the player's best score there. */
   rank: number;
+  /** The player's overall score: the sum of their best scores on all boards. */
+  total: number;
+  /** Place on the global board. */
+  totalRank: number;
 }
 
 /** PUT /api/player body: renames every entry of that uuid. */
@@ -35,12 +60,14 @@ export interface PlayerRequest {
   name: string;
 }
 
-/** An entry of GET /api/leaderboard (best first). The uuid is never exposed. */
+/**
+ * An entry of GET /api/leaderboard (best first), one per player. Without a
+ * `board` query the score is the sum of the player's best scores. The uuid is
+ * never exposed.
+ */
 export interface LeaderboardEntry {
   name: string;
   score: number;
-  /** ISO 8601 timestamp set by the server. */
-  createdAt: string;
 }
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -63,13 +90,13 @@ export function validateName(value: unknown): { name: string } | ApiError {
 export function validateScore(body: unknown): ScoreRequest | ApiError {
   if (typeof body !== 'object' || body === null) return { error: 'invalid' };
   const b = body as Record<string, unknown>;
-  if (!isUuid(b.uuid) || !isUuid(b.runId)) return { error: 'invalid' };
+  if (!isUuid(b.uuid) || !isUuid(b.runId) || !isBoard(b.board)) return { error: 'invalid' };
   if (!Number.isInteger(b.score) || (b.score as number) < 0 || (b.score as number) > MAX_SCORE) {
     return { error: 'invalid' };
   }
   const name = validateName(b.name);
   if ('error' in name) return name;
-  return { uuid: b.uuid, runId: b.runId, name: name.name, score: b.score as number };
+  return { uuid: b.uuid, runId: b.runId, board: b.board, name: name.name, score: b.score as number };
 }
 
 export function validatePlayer(body: unknown): PlayerRequest | ApiError {

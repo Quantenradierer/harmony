@@ -7,6 +7,7 @@
   import { submitRun } from '../leaderboard/submit.ts';
   import { player } from '../audio/setup.ts';
   import Quiz from '../components/Quiz.svelte';
+  import Leaderboard from '../components/Leaderboard.svelte';
   import TheoryCards from '../components/TheoryCards.svelte';
   import { lessonSummary } from '../lessons.ts';
 
@@ -20,7 +21,7 @@
   const path = lesson ? LESSONS[lesson.spec.module] : [];
   const index = path.findIndex((l) => l.id === id);
   const nextLesson = path[index + 1];
-  const quiz = lesson ? createSession({ spec: lesson.spec, lessonId: id, progress, player, settings, onFinish: submitRun }) : undefined;
+  const quiz = lesson ? createSession({ spec: lesson.spec, lessonId: id, progress, player, settings, onFinish: (r) => submitRun(r, id) }) : undefined;
   const passedBefore = $progress.passed.includes(id);
 
   const score = $derived(lessonScore($progress.lessonHistory[id] ?? []));
@@ -43,6 +44,7 @@
     </a>
   {/if}
   <Quiz {quiz} categories={specCategories(lesson.spec)} stats={$progress.categories} label={$label} />
+  <Leaderboard board={id} title={$t('leaderboard.lesson')} />
 {:else}
   <p>{$t('home.locked')}</p>
 {/if}

@@ -1,10 +1,10 @@
-import type { ScoreRequest } from '@harmony/shared';
+import type { ScoreCreated, ScoreRequest } from '@harmony/shared';
 import type { KeyValueStore } from '../storage/kv.ts';
 import { postScore, type ScoreResult } from './client.ts';
 
 const KEY = 'scoreQueue';
 
-export type SubmitResult = { status: 'sent'; rank: number } | { status: 'queued' | 'rejected' };
+export type SubmitResult = ({ status: 'sent' } & ScoreCreated) | { status: 'queued' | 'rejected' };
 
 /** Scores that could not be sent (offline, server down) are kept and sent by flush(). */
 export class ScoreQueue {
