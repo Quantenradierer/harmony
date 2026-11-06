@@ -1,8 +1,9 @@
 <script lang="ts">
-  import type { CategoryStats } from '@harmony/shared';
+  import { get } from 'svelte/store';
+  import { newAchievements, type Achievement, type CategoryStats } from '@harmony/shared';
   import type { QuizController } from '../quiz/controller.ts';
   import { progress, settings } from '../stores.ts';
-  import { t, language, yesNoQuestion } from '../i18n/index.ts';
+  import { t, language, yesNoQuestion, type MessageKey } from '../i18n/index.ts';
   import { instrumentStatus } from '../audio/setup.ts';
   import AnswerButtons from './AnswerButtons.svelte';
   import ScoreBar from './ScoreBar.svelte';
@@ -26,7 +27,28 @@
   } = $props();
   const quizState = $derived(quiz.state);
   const round = $derived($quizState.round);
+
+  // Announce achievements earned while this quiz is open.
+  let seen = get(progress);
+  let toasts = $state<Achievement[]>([]);
+  $effect(() => {
+    const now = $progress;
+    const fresh = newAchievements(seen, now);
+    seen = now;
+    if (fresh.length === 0) return;
+    toasts = [...toasts, ...fresh];
+    setTimeout(() => (toasts = toasts.filter((a) => !fresh.includes(a))), 5000);
+  });
 </script>
+
+<div class="toasts" aria-live="polite">
+  {#each toasts as a (a.id)}
+    <p class="toast" data-testid="achievement-toast">
+      <span aria-hidden="true">{a.icon}</span>
+      <span>{$t('achievements.unlocked')}: <strong>{$t(`achievement.${a.id}.name` as MessageKey)}</strong></span>
+    </p>
+  {/each}
+</div>
 
 {#if $instrumentStatus === 'loading'}
   <p class="status" role="status">{$t('quiz.loading')}</p>
@@ -88,6 +110,44 @@
 <AccuracyList {categories} {stats} {label} />
 
 <style>
+  .toasts {
+    position: fixed;
+    left: 50%;
+    bottom: 1rem;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: min(24rem, calc(100% - 2rem));
+    pointer-events: none;
+  }
+  .toast {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin: 0;
+    padding: 0.6rem 1rem;
+    border: 2px solid var(--accent);
+    border-radius: 0.75rem;
+    background: var(--surface);
+    box-shadow: 0 4px 16px rgb(0 0 0 / 0.25);
+    animation: pop 0.3s ease-out;
+  }
+  .toast span:first-child {
+    font-size: 1.5rem;
+  }
+  @keyframes pop {
+    from {
+      transform: translateY(1rem);
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .toast {
+      animation: none;
+    }
+  }
   .quiz {
     display: flex;
     flex-direction: column;

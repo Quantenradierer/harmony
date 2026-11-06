@@ -11,11 +11,13 @@
     dailyMedal,
     dayKey,
     longestStreak,
+    ACHIEVEMENTS,
+    isEarned,
     type Medal,
     type ModuleId,
   } from '@harmony/shared';
   import { progress, settings } from '../stores.ts';
-  import { t, language, categoryLabel } from '../i18n/index.ts';
+  import { t, language, categoryLabel, type MessageKey } from '../i18n/index.ts';
   import { href } from '../router.ts';
   import Leaderboard from '../components/Leaderboard.svelte';
   import ProgressChart from '../components/ProgressChart.svelte';
@@ -33,6 +35,7 @@
   const lessonCount = $derived(Object.values(LESSONS).flat().length);
   const done = $derived($progress.dailyDone ?? []);
   const daily = $derived(dailyMedal(done));
+  const earnedCount = $derived(ACHIEVEMENTS.filter((a) => isEarned(a, $progress)).length);
 </script>
 
 <h2>{$t('trophies.title')}</h2>
@@ -58,6 +61,32 @@
 </section>
 
 <ProgressChart />
+
+<section>
+  <h3>{$t('achievements.title')}</h3>
+  <p class="hint" data-testid="achievement-count">
+    {$t('achievements.count', { n: earnedCount, total: ACHIEVEMENTS.length })}
+  </p>
+  <ul class="achievements">
+    {#each ACHIEVEMENTS as a (a.id)}
+      {@const earned = isEarned(a, $progress)}
+      {@const value = Math.min(a.value($progress), a.target)}
+      <li class:earned data-testid="achievement" data-id={a.id} data-earned={earned}>
+        <span class="icon" aria-hidden="true">{a.icon}</span>
+        <span class="text">
+          <strong>{$t(`achievement.${a.id}.name` as MessageKey)}</strong>
+          <small>{$t(`achievement.${a.id}.desc` as MessageKey, { n: a.target })}</small>
+          {#if !earned && a.target > 1}
+            <span class="bar" role="progressbar" aria-valuemin="0" aria-valuemax={a.target} aria-valuenow={value}>
+              <span style:width="{(value / a.target) * 100}%"></span>
+            </span>
+            <small>{value} / {a.target}</small>
+          {/if}
+        </span>
+      </li>
+    {/each}
+  </ul>
+</section>
 
 <section>
   <h3>{$t('daily.title')} {daily ? ICON[daily] : ''}</h3>
@@ -129,6 +158,56 @@
   .milestones {
     display: flex;
     gap: 1rem;
+  }
+  .achievements {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    gap: 0.5rem;
+  }
+  .achievements li {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    background: var(--surface);
+  }
+  .achievements li:not(.earned) .icon {
+    filter: grayscale(1);
+    opacity: 0.45;
+  }
+  .achievements li:not(.earned) strong {
+    color: var(--muted);
+  }
+  .achievements .icon {
+    flex: 0 0 2rem;
+    font-size: 1.75rem;
+    line-height: 1;
+    text-align: center;
+  }
+  .achievements .text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+  .achievements small {
+    color: var(--muted);
+  }
+  .bar {
+    display: block;
+    height: 0.35rem;
+    margin-top: 0.2rem;
+    border-radius: 1rem;
+    background: var(--border);
+    overflow: hidden;
+  }
+  .bar span {
+    display: block;
+    height: 100%;
+    background: var(--accent);
   }
   .milestones span:not(.earned) {
     filter: grayscale(1);

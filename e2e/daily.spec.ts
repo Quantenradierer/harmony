@@ -17,6 +17,7 @@ test('finishing the daily challenge marks the day and shows on the progress char
     if (i < 19) await page.click('.next');
   }
   await expect(page.getByTestId('run-status')).toHaveText(/Tagesaufgabe geschafft/);
+  await expect(page.getByTestId('achievement-toast').filter({ hasText: 'Frühaufsteher' })).toBeVisible();
   await expect(page.getByTestId('daily-status')).toHaveText(/Heute geschafft/);
   await expect(page.getByTestId('daily-streak')).toHaveText('1');
 
@@ -25,4 +26,8 @@ test('finishing the daily challenge marks the day and shows on the progress char
 
   await page.goto('/#/trophies');
   await expect(page.getByTestId('chart-readout')).toHaveText(/20 Antworten, 100 % im ersten Versuch/);
+  for (const id of ['first-answer', 'first-gold', 'session-200', 'perfect-day', 'first-daily']) {
+    await expect(page.locator(`[data-testid="achievement"][data-id="${id}"]`)).toHaveAttribute('data-earned', 'true');
+  }
+  await expect(page.getByTestId('achievement-count')).toHaveText(/5 von 15 erreicht/);
 });
