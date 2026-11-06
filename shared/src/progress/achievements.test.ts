@@ -43,6 +43,22 @@ describe('achievements', () => {
     expect(earnedAchievements({ ...p, passed: ids })).toContain('master-notes');
   });
 
+  it('count practice days in a row, broken by an idle day', () => {
+    let p = emptyProgress();
+    for (const day of ['2026-11-01', '2026-11-02', '2026-11-04', '2026-11-05', '2026-11-06']) p = answer(p, 'note:0', false, day);
+    expect(earnedAchievements(p)).toContain('streak-3');
+    expect(earnedAchievements(p)).not.toContain('streak-7');
+    const streak7 = ACHIEVEMENTS.find((a) => a.id === 'streak-7')!;
+    expect(streak7.value(p)).toBe(3);
+  });
+
+  it('count daily challenges in a row', () => {
+    let p = emptyProgress();
+    for (const day of ['2026-11-04', '2026-11-05', '2026-11-06']) p = completeDaily(p, day);
+    expect(earnedAchievements(p)).toEqual(expect.arrayContaining(['first-daily', 'daily-streak-3']));
+    expect(earnedAchievements(p)).not.toContain('daily-streak-7');
+  });
+
   it('report only the newly earned ones', () => {
     const before = answer(emptyProgress(), 'note:0');
     const after = completeDaily(before, '2026-11-06');

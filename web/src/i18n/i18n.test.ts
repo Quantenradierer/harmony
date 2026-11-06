@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { get } from 'svelte/store';
 import { catalogs, categoryLabel, t, translate, yesNoQuestion } from './index.ts';
 import { settings } from '../stores.ts';
-import { LESSONS } from '@harmony/shared';
+import { ACHIEVEMENTS, LESSONS } from '@harmony/shared';
 
 describe('i18n', () => {
   it('has the same keys in every language, none empty', () => {
@@ -16,6 +16,13 @@ describe('i18n', () => {
   it('describes every lesson', () => {
     for (const l of Object.values(LESSONS).flat()) {
       expect(Object.keys(catalogs.en)).toContain(`lesson.desc.${l.id}`);
+    }
+  });
+
+  it('names and describes every achievement', () => {
+    for (const a of ACHIEVEMENTS) {
+      expect(Object.keys(catalogs.en)).toContain(`achievement.${a.id}.name`);
+      expect(Object.keys(catalogs.en)).toContain(`achievement.${a.id}.desc`);
     }
   });
 
