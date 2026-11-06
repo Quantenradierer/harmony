@@ -29,6 +29,7 @@ export function createBackup(progress: Progress, settings: Settings, now = new D
 const isObject = (v: unknown): v is Record<string, unknown> =>
   typeof v === 'object' && v !== null && !Array.isArray(v);
 const isCount = (v: unknown) => typeof v === 'number' && Number.isInteger(v) && v >= 0;
+const DAY = /^\d{4}-\d{2}-\d{2}$/;
 
 function validProgress(p: unknown): p is Progress {
   return (
@@ -39,7 +40,13 @@ function validProgress(p: unknown): p is Progress {
     isObject(p.lessonHistory) &&
     Object.values(p.lessonHistory).every((h) => Array.isArray(h) && h.every((x) => typeof x === 'boolean')) &&
     Array.isArray(p.passed) &&
-    p.passed.every((id) => typeof id === 'string')
+    p.passed.every((id) => typeof id === 'string') &&
+    (p.days === undefined ||
+      (isObject(p.days) &&
+        Object.entries(p.days).every(
+          ([day, d]) => DAY.test(day) && isObject(d) && isCount(d.answers) && isCount(d.correct) && isCount(d.points),
+        ))) &&
+    (p.dailyDone === undefined || (Array.isArray(p.dailyDone) && p.dailyDone.every((d) => typeof d === 'string' && DAY.test(d))))
   );
 }
 

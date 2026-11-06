@@ -7,6 +7,7 @@ export * from './quiz/notes.ts';
 export * from './progress/scoring.ts';
 export * from './progress/progress.ts';
 export * from './progress/medals.ts';
+export * from './progress/daily.ts';
 export * from './lessons/lessons.ts';
 export * from './lessons/gating.ts';
 export * from './quiz/generate.ts';

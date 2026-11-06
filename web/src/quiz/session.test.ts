@@ -43,4 +43,22 @@ describe('quiz session', () => {
     await quiz.next();
     expect(get(quiz.state).round!.question.sound.events[0]!.midi).toBe(72);
   });
+
+  it('counts answers on the day they were given', async () => {
+    const progress = writable(emptyProgress());
+    const now = () => new Date(2026, 10, 6, 9, 30);
+    const quiz = createSession({ spec: LESSONS.notes[0]!.spec, progress, player, settings, now });
+    await answerCorrectly(quiz, 3);
+    expect(get(progress).days?.['2026-11-06']).toMatchObject({ answers: 3, correct: 3 });
+  });
+
+  it('mixes modules when given several specs', async () => {
+    const progress = writable(emptyProgress());
+    const values = [0.9, 0, 0, 0, 0, 0];
+    let i = 0;
+    const rng = () => values[i++ % values.length]!;
+    const quiz = createSession({ spec: [LESSONS.notes[0]!.spec, LESSONS.intervals[0]!.spec], progress, player, settings, rng });
+    await quiz.next();
+    expect(get(quiz.state).round!.question.category).toMatch(/^interval:/);
+  });
 });

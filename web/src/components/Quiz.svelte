@@ -15,11 +15,14 @@
     label,
     categories,
     stats,
+    ranked = true,
   }: {
     quiz: QuizController;
     label: (id: string) => string;
     categories: string[];
     stats: Record<string, CategoryStats>;
+    /** The score goes to a leaderboard; show where it landed. */
+    ranked?: boolean;
   } = $props();
   const quizState = $derived(quiz.state);
   const round = $derived($quizState.round);
@@ -57,7 +60,9 @@
         <h3>{$t('result.title', { n: $quizState.answered })}</h3>
         <p class="points">{$t('result.score')}: <strong data-testid="run-score">{$quizState.session.points}</strong></p>
         <p data-testid="run-status">
-          {#if $runResult?.status === 'sent'}
+          {#if !ranked}
+            {$t('daily.finished')}
+          {:else if $runResult?.status === 'sent'}
             {$t('result.rank', { rank: $runResult.rank })}
             {$t('result.total', { total: $runResult.total, totalRank: $runResult.totalRank })}
           {:else if $runResult?.status === 'queued'}
@@ -71,7 +76,7 @@
           {/if}
         </p>
         <button class="primary again" onclick={() => quiz.restart().catch(() => {})}>{$t('result.again')}</button>
-        <a href={href({ name: 'trophies' })}>{$t('result.board')}</a>
+        {#if ranked}<a href={href({ name: 'trophies' })}>{$t('result.board')}</a>{/if}
       </div>
     {:else if round.done}
       <button class="primary next" onclick={() => quiz.next().catch(() => {})}>{$t('quiz.next')}</button>

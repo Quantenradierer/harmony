@@ -1,4 +1,5 @@
 import type { Outcome } from '../quiz/round.ts';
+import type { DayStats } from './daily.ts';
 
 export interface CategoryStats {
   attempts: number;
@@ -16,6 +17,10 @@ export interface Progress {
   passed: string[];
   /** Highest points reached within one practice session (highscore). */
   bestSession?: number;
+  /** Answers and points per local calendar day (YYYY-MM-DD). */
+  days?: Record<string, DayStats>;
+  /** Days (YYYY-MM-DD) whose daily challenge was finished, ascending. */
+  dailyDone?: string[];
 }
 
 export function emptyProgress(): Progress {
@@ -28,19 +33,31 @@ export interface AnswerRecord {
   points: number;
   /** Points of the running session after this answer. */
   sessionPoints?: number;
+  /** Local calendar day of the answer (YYYY-MM-DD); counted in `days` when set. */
+  day?: string;
 }
 
 export function recordAnswer(progress: Progress, answer: AnswerRecord): Progress {
   const prev = progress.categories[answer.category] ?? { attempts: 0, correct: 0 };
+  const firstTry = answer.outcome === 'first-try';
+  let days = progress.days;
+  if (answer.day) {
+    const d = days?.[answer.day] ?? { answers: 0, correct: 0, points: 0 };
+    days = {
+      ...days,
+      [answer.day]: { answers: d.answers + 1, correct: d.correct + (firstTry ? 1 : 0), points: d.points + answer.points },
+    };
+  }
   return {
     ...progress,
+    ...(days ? { days } : {}),
     totalPoints: progress.totalPoints + answer.points,
     bestSession: Math.max(progress.bestSession ?? 0, answer.sessionPoints ?? 0),
     categories: {
       ...progress.categories,
       [answer.category]: {
         attempts: prev.attempts + 1,
-        correct: prev.correct + (answer.outcome === 'first-try' ? 1 : 0),
+        correct: prev.correct + (firstTry ? 1 : 0),
       },
     },
   };

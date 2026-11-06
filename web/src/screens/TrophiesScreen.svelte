@@ -6,6 +6,11 @@
     pointsMedal,
     POINT_MILESTONES,
     practiceCategories,
+    DAILY_AWARDS,
+    currentStreak,
+    dailyMedal,
+    dayKey,
+    longestStreak,
     type Medal,
     type ModuleId,
   } from '@harmony/shared';
@@ -13,6 +18,7 @@
   import { t, language, categoryLabel } from '../i18n/index.ts';
   import { href } from '../router.ts';
   import Leaderboard from '../components/Leaderboard.svelte';
+  import ProgressChart from '../components/ProgressChart.svelte';
 
   const MODULES: ModuleId[] = ['notes', 'intervals', 'chords'];
   const ICON: Record<Medal, string> = { gold: '🥇', silver: '🥈', bronze: '🥉' };
@@ -25,6 +31,8 @@
   const total = $derived($progress.totalPoints);
   const overall = $derived(pointsMedal(total));
   const lessonCount = $derived(Object.values(LESSONS).flat().length);
+  const done = $derived($progress.dailyDone ?? []);
+  const daily = $derived(dailyMedal(done));
 </script>
 
 <h2>{$t('trophies.title')}</h2>
@@ -47,6 +55,22 @@
       <span class:earned={total >= m.points}>{ICON[m.medal]} {m.points}</span>
     {/each}
   </p>
+</section>
+
+<ProgressChart />
+
+<section>
+  <h3>{$t('daily.title')} {daily ? ICON[daily] : ''}</h3>
+  <p>
+    {$t('daily.streak')}: <strong>{currentStreak(done, dayKey(new Date()))}</strong> · {$t('daily.best')}:
+    <strong>{longestStreak(done)}</strong> · {$t('daily.total')}: <strong>{done.length}</strong>
+  </p>
+  <p class="milestones">
+    {#each DAILY_AWARDS as a (a.medal)}
+      <span class:earned={longestStreak(done) >= a.days}>{ICON[a.medal]} {$t('daily.days', { n: a.days })}</span>
+    {/each}
+  </p>
+  <a href={href({ name: 'daily' })}>{$t('daily.go')}</a>
 </section>
 
 <section>

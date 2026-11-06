@@ -1,11 +1,7 @@
+import { dayKey } from '@harmony/shared';
 import type { Reminder } from './settings.ts';
 
-/** Local calendar day as YYYY-MM-DD. */
-export function dayKey(now: Date): string {
-  const m = String(now.getMonth() + 1).padStart(2, '0');
-  const d = String(now.getDate()).padStart(2, '0');
-  return `${now.getFullYear()}-${m}-${d}`;
-}
+export { dayKey };
 
 /** True once the reminder time has passed on an enabled weekday, if not yet shown today. */
 export function isReminderDue(now: Date, reminder: Reminder, lastShown: string | undefined): boolean {

@@ -10,9 +10,9 @@ import { bindPersisted } from './storage/persisted.ts';
 const flush = () => new Promise((r) => setTimeout(r, 20));
 
 function someProgress(): Progress {
-  let p = recordAnswer(emptyProgress(), { category: 'note:0', outcome: 'first-try', points: 10 });
+  let p = recordAnswer(emptyProgress(), { category: 'note:0', outcome: 'first-try', points: 10, day: '2026-11-05' });
   for (let i = 0; i < 20; i++) p = recordLessonResult(p, 'notes-1', true);
-  return p;
+  return { ...p, dailyDone: ['2026-11-05'] };
 }
 
 const someSettings: Settings = {
@@ -76,6 +76,9 @@ describe('progress backup', () => {
       { ...file, progress: { ...file.progress, passed: [1] } },
       { ...file, progress: { ...file.progress, categories: { 'note:0': { attempts: -1, correct: 0 } } } },
       { ...file, settings: { ...file.settings, language: 'fr' } },
+      { ...file, progress: { ...file.progress, days: { yesterday: { answers: 1, correct: 0, points: 0 } } } },
+      { ...file, progress: { ...file.progress, days: { '2026-11-05': { answers: 1.5, correct: 0, points: 0 } } } },
+      { ...file, progress: { ...file.progress, dailyDone: ['soon'] } },
     ];
     for (const b of broken) expect(parseBackup(JSON.stringify(b))).toEqual({ ok: false, error: 'invalid' });
   });

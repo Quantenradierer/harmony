@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { LESSONS, isUnlocked, type ModuleId } from '@harmony/shared';
+  import { LESSONS, currentStreak, dayKey, isUnlocked, type ModuleId } from '@harmony/shared';
   import { progress, settings } from '../stores.ts';
   import { t, language } from '../i18n/index.ts';
   import { lessonSummary } from '../lessons.ts';
@@ -7,7 +7,18 @@
   import type { MessageKey } from '../i18n/index.ts';
 
   const MODULES: ModuleId[] = ['notes', 'intervals', 'chords'];
+  const today = dayKey(new Date());
+  const done = $derived($progress.dailyDone ?? []);
+  const streak = $derived(currentStreak(done, today));
 </script>
+
+<a class="daily" class:passed={done.includes(today)} href={href({ name: 'daily' })} data-testid="daily-link">
+  <strong>☀ {$t('daily.title')}</strong>
+  <span>{$t('daily.teaser')}</span>
+  <em>
+    {#if done.includes(today)}✓ {$t('daily.doneToday')}{:else if streak > 0}🔥 {streak}{/if}
+  </em>
+</a>
 
 {#each MODULES.filter((m) => LESSONS[m].length > 0) as module (module)}
   <section class="module">
@@ -51,6 +62,20 @@
     flex-direction: column;
     gap: 0.5rem;
   }
+  .daily {
+    border-color: var(--accent);
+  }
+  .daily span {
+    color: var(--muted);
+  }
+  .daily em {
+    margin-left: auto;
+    font-style: normal;
+  }
+  .daily.passed em {
+    color: var(--green);
+  }
+  .daily,
   .lesson,
   .practice {
     display: flex;

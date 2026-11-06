@@ -13,6 +13,8 @@ describe('router', () => {
       { name: 'practice', module: 'chords' },
       { name: 'settings' },
       { name: 'feedback' },
+      { name: 'trophies' },
+      { name: 'daily' },
     ] as const) {
       expect(parseRoute(href(r))).toEqual(r);
     }
