@@ -100,7 +100,7 @@ export function createApp(options: AppOptions = {}): Hono {
   }
 
   if (leaderboard) {
-    const small = bodyLimit({ maxSize: 1024, onError: (c) => error(c, 413, 'too-long') });
+    const small = bodyLimit({ maxSize: 4096, onError: (c) => error(c, 413, 'too-long') });
 
     app.post(SCORES_PATH, small, async (c) => {
       if (!scoreLimiter.allow(clientIp(c))) return error(c, 429, 'rate-limited');

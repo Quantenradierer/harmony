@@ -17,7 +17,20 @@ describe('leaderboard validation', () => {
       board: BOARD,
       name: 'Ada',
       score: 120,
+      achievements: [],
     });
+  });
+
+  it('keeps known achievement ids once and drops unknown ones', () => {
+    const r = validateScore({
+      uuid: UUID,
+      runId: RUN,
+      board: BOARD,
+      name: 'Ada',
+      score: 1,
+      achievements: ['first-answer', 'first-answer', 'bogus', 7],
+    });
+    expect(r).toMatchObject({ achievements: ['first-answer'] });
   });
 
   it('rejects impossible scores and bad ids', () => {

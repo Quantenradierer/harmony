@@ -33,10 +33,10 @@ describe('leaderboard API', () => {
     await score(BOB, 'Bob', 'notes-1', 150);
     await score(BOB, 'Bob', 'notes-2', 250);
     expect(await list('notes-1')).toEqual([
-      { name: 'Ada', score: 180 },
-      { name: 'Bob', score: 150 },
+      { name: 'Ada', score: 180, achievements: [] },
+      { name: 'Bob', score: 150, achievements: [] },
     ]);
-    expect(await list('notes-2')).toEqual([{ name: 'Bob', score: 250 }]);
+    expect(await list('notes-2')).toEqual([{ name: 'Bob', score: 250, achievements: [] }]);
   });
 
   it('answers with the place on the board and overall', async () => {
@@ -56,16 +56,27 @@ describe('leaderboard API', () => {
     await score(BOB, 'Bob', 'notes-1', 285);
     await score(BOB, 'Bob', 'practice-notes', 10);
     expect(await list()).toEqual([
-      { name: 'Ada', score: 250 },
-      { name: 'Bob', score: 295 },
+      { name: 'Ada', score: 250, achievements: [] },
+      { name: 'Bob', score: 295, achievements: [] },
     ].sort((a, b) => b.score - a.score));
+  });
+
+  it('shows earned achievements on every board and never takes any away', async () => {
+    const { send, list } = setup();
+    const post = (board: string, achievements: string[]) =>
+      send('POST', '/api/scores', { uuid: ADA, runId: run(), board, name: 'Ada', score: 10, achievements });
+    await post('notes-1', ['first-answer']);
+    await post('notes-2', ['first-lesson']);
+    await post('notes-2', []);
+    expect((await list())[0]!.achievements.sort()).toEqual(['first-answer', 'first-lesson']);
+    expect((await list('notes-1'))[0]!.achievements.sort()).toEqual(['first-answer', 'first-lesson']);
   });
 
   it('never exposes uuids', async () => {
     const { score, list } = setup();
     await score(ADA, 'Ada', 'notes-1', 100);
-    expect(Object.keys((await list('notes-1'))[0]!)).toEqual(['name', 'score']);
-    expect(Object.keys((await list())[0]!)).toEqual(['name', 'score']);
+    expect(Object.keys((await list('notes-1'))[0]!)).toEqual(['name', 'score', 'achievements']);
+    expect(Object.keys((await list())[0]!)).toEqual(['name', 'score', 'achievements']);
   });
 
   it('ignores a repeated run so retries do not duplicate', async () => {
@@ -73,7 +84,7 @@ describe('leaderboard API', () => {
     const body = { uuid: ADA, runId: run(), board: 'notes-1', name: 'Ada', score: 100 };
     await send('POST', '/api/scores', body);
     expect((await send('POST', '/api/scores', body)).status).toBe(201);
-    expect(await list()).toEqual([{ name: 'Ada', score: 100 }]);
+    expect(await list()).toEqual([{ name: 'Ada', score: 100, achievements: [] }]);
   });
 
   it('renames all entries of a uuid, with a score or through PUT /api/player', async () => {

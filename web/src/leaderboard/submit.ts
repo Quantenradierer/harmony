@@ -1,6 +1,6 @@
 import { get, writable } from 'svelte/store';
-import type { ScoreCreated } from '@harmony/shared';
-import { scoreQueue, settings } from '../stores.ts';
+import { earnedAchievements, type ScoreCreated } from '@harmony/shared';
+import { progress, scoreQueue, settings } from '../stores.ts';
 import { putPlayerName } from './client.ts';
 
 export type RunResult =
@@ -27,7 +27,7 @@ export async function submitRun({ points }: { points: number }, board: string): 
     return;
   }
   runResult.set({ status: 'sending' });
-  const result = await scoreQueue.submit({ uuid: playerId(), board, runId: crypto.randomUUID(), name, score: points });
+  const result = await scoreQueue.submit({ uuid: playerId(), board, runId: crypto.randomUUID(), name, score: points, achievements: earnedAchievements(get(progress)) });
   runResult.set(
     result.status === 'sent'
       ? result

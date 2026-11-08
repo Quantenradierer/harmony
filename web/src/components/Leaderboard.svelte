@@ -1,11 +1,15 @@
 <script lang="ts">
+  import { ACHIEVEMENTS } from '@harmony/shared';
   import { settings } from '../stores.ts';
-  import { t } from '../i18n/index.ts';
+  import { t, type MessageKey } from '../i18n/index.ts';
   import { fetchLeaderboard } from '../leaderboard/client.ts';
   import { runResult } from '../leaderboard/submit.ts';
 
   /** A lesson id or `practice-<module>`; omit for the global board. */
   let { board, title }: { board?: string; title: string } = $props();
+
+  /** Earned achievements in display order; unknown ids (newer server) are skipped. */
+  const badges = (ids: string[]) => ACHIEVEMENTS.filter((a) => ids.includes(a.id));
 
   const MEDALS = ['🥇', '🥈', '🥉'];
   // Reload when a score was just sent.
@@ -30,7 +34,16 @@
         {#each list as e, i (i)}
           <li class:me={e.name === $settings.playerName.trim()}>
             <span class="place">{MEDALS[i] ?? `${i + 1}.`}</span>
-            <span class="who">{e.name}</span>
+            <span class="who">
+              {e.name}
+              {#if e.achievements?.length}
+                <span class="badges" data-testid="board-badges">
+                  {#each badges(e.achievements) as a (a.id)}
+                    <span class="badge" title={$t(`achievement.${a.id}.name` as MessageKey)}>{a.icon}</span>
+                  {/each}
+                </span>
+              {/if}
+            </span>
             <strong class="pts">{e.score}</strong>
           </li>
         {/each}
@@ -63,6 +76,12 @@
   }
   .place {
     min-width: 2rem;
+  }
+  .badges {
+    display: block;
+    font-size: 0.8rem;
+    line-height: 1.3;
+    font-weight: normal;
   }
   .who {
     flex: 1;

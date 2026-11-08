@@ -6,6 +6,14 @@ const BEST_PER_BOARD = `
   SELECT uuid, board, MAX(score) AS best FROM scores WHERE board != '' GROUP BY uuid, board
 `;
 
+function toEntry(row: Record<string, unknown>): LeaderboardEntry {
+  return {
+    name: row.name as string,
+    score: row.score as number,
+    achievements: typeof row.ids === 'string' ? (JSON.parse(row.ids) as string[]) : [],
+  };
+}
+
 /** Leaderboard entries in SQLite. Pass ':memory:' for tests. */
 export class LeaderboardStore {
   private db: DatabaseSync;
@@ -28,6 +36,12 @@ export class LeaderboardStore {
       this.db.exec("ALTER TABLE scores ADD COLUMN board TEXT NOT NULL DEFAULT ''");
     }
     this.db.exec(`
+      CREATE TABLE IF NOT EXISTS player_achievements (
+        uuid TEXT PRIMARY KEY,
+        ids TEXT NOT NULL
+      );
+    `);
+    this.db.exec(`
       CREATE INDEX IF NOT EXISTS scores_uuid ON scores (uuid);
       CREATE INDEX IF NOT EXISTS scores_board ON scores (board, uuid);
     `);
@@ -38,7 +52,7 @@ export class LeaderboardStore {
    * uuid the submitted name.
    */
   add(
-    entry: { uuid: string; runId: string; board: string; name: string; score: number },
+    entry: { uuid: string; runId: string; board: string; name: string; score: number; achievements?: string[] },
     createdAt: Date,
   ): ScoreCreated {
     this.db.exec('BEGIN');
@@ -49,6 +63,15 @@ export class LeaderboardStore {
           'INSERT OR IGNORE INTO scores (run_id, uuid, board, name, score, created_at) VALUES (?, ?, ?, ?, ?, ?)',
         )
         .run(entry.runId, entry.uuid, entry.board, entry.name, entry.score, createdAt.toISOString());
+      // Only grows: a client that knows fewer achievements never removes any.
+      if (entry.achievements?.length) {
+        const merged = [...new Set([...this.achievementsOf(entry.uuid), ...entry.achievements])];
+        this.db
+          .prepare(
+            'INSERT INTO player_achievements (uuid, ids) VALUES (?, ?) ON CONFLICT(uuid) DO UPDATE SET ids = excluded.ids',
+          )
+          .run(entry.uuid, JSON.stringify(merged));
+      }
       const best = this.db
         .prepare('SELECT MAX(score) AS best FROM scores WHERE uuid = ? AND board = ?')
         .get(entry.uuid, entry.board) as { best: number };
@@ -71,6 +94,13 @@ export class LeaderboardStore {
     }
   }
 
+  private achievementsOf(uuid: string): string[] {
+    const row = this.db.prepare('SELECT ids FROM player_achievements WHERE uuid = ?').get(uuid) as
+      | { ids: string }
+      | undefined;
+    return row ? (JSON.parse(row.ids) as string[]) : [];
+  }
+
   /** Renames all entries of the uuid; returns how many changed. */
   rename(uuid: string, name: string): number {
     return Number(this.db.prepare('UPDATE scores SET name = ? WHERE uuid = ? AND name != ?').run(name, uuid, name).changes);
@@ -80,10 +110,13 @@ export class LeaderboardStore {
   listBoard(board: string, limit: number): LeaderboardEntry[] {
     return this.db
       .prepare(
-        `SELECT MAX(name) AS name, MAX(score) AS score FROM scores WHERE board = ?
+        `SELECT MAX(name) AS name, MAX(score) AS score,
+                (SELECT ids FROM player_achievements a WHERE a.uuid = scores.uuid) AS ids
+         FROM scores WHERE board = ?
          GROUP BY uuid ORDER BY score DESC, MIN(id) ASC LIMIT ?`,
       )
-      .all(board, limit) as unknown as LeaderboardEntry[];
+      .all(board, limit)
+      .map(toEntry);
   }
 
   /** Global board: per player the sum of their best scores on all boards. */
@@ -91,10 +124,12 @@ export class LeaderboardStore {
     return this.db
       .prepare(
         `SELECT (SELECT name FROM scores s WHERE s.uuid = b.uuid ORDER BY id DESC LIMIT 1) AS name,
-                SUM(best) AS score
+                SUM(best) AS score,
+                (SELECT ids FROM player_achievements a WHERE a.uuid = b.uuid) AS ids
          FROM (${BEST_PER_BOARD}) b GROUP BY uuid ORDER BY score DESC, MIN(uuid) ASC LIMIT ?`,
       )
-      .all(limit) as unknown as LeaderboardEntry[];
+      .all(limit)
+      .map(toEntry);
   }
 
   ping(): void {

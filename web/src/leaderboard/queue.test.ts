@@ -10,6 +10,7 @@ const score = (n: number): ScoreRequest => ({
   runId: `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`,
   name: 'Ada',
   score: n,
+  achievements: [],
 });
 
 describe('score queue', () => {

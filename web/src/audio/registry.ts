@@ -64,6 +64,9 @@ export const INSTRUMENTS: InstrumentEntry[] = [
   },
   { id: 'guitar-synth', name: { de: 'Gitarre (Synth)', en: 'Guitar (synth)' }, timbre: 'guitar' },
   { id: 'accordion-synth', name: { de: 'Akkordeon (Synth)', en: 'Accordion (synth)' }, timbre: 'accordion' },
+  { id: 'organ', name: { de: 'Orgel', en: 'Organ' }, timbre: 'organ' },
+  { id: 'strings', name: { de: 'Streicher', en: 'Strings' }, timbre: 'strings' },
+  { id: 'flute', name: { de: 'Flöte', en: 'Flute' }, timbre: 'flute' },
 ];
 
 export const DEFAULT_INSTRUMENT = 'synth';

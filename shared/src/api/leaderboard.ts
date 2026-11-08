@@ -1,4 +1,5 @@
 import { POINTS_FIRST_TRY, STREAK_BONUS_MAX } from '../progress/scoring.ts';
+import { ACHIEVEMENTS } from '../progress/achievements.ts';
 import { LESSONS, findLesson } from '../lessons/lessons.ts';
 import type { ModuleId } from '../quiz/types.ts';
 import type { ApiError } from './feedback.ts';
@@ -42,6 +43,8 @@ export interface ScoreRequest {
   runId: string;
   name: string;
   score: number;
+  /** Ids of the achievements the player has earned (shown next to their name). */
+  achievements: string[];
 }
 
 /** POST /api/scores response (201): the player's place on that board and overall. */
@@ -68,6 +71,8 @@ export interface PlayerRequest {
 export interface LeaderboardEntry {
   name: string;
   score: number;
+  /** Ids of the player's earned achievements. */
+  achievements: string[];
 }
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -96,7 +101,11 @@ export function validateScore(body: unknown): ScoreRequest | ApiError {
   }
   const name = validateName(b.name);
   if ('error' in name) return name;
-  return { uuid: b.uuid, runId: b.runId, board: b.board, name: name.name, score: b.score as number };
+  // Optional (older clients omit it); unknown ids are dropped, duplicates collapse.
+  const known = new Set(ACHIEVEMENTS.map((a) => a.id));
+  const given = Array.isArray(b.achievements) ? (b.achievements as unknown[]) : [];
+  const achievements = [...new Set(given.filter((id): id is string => typeof id === 'string' && known.has(id)))];
+  return { uuid: b.uuid, runId: b.runId, board: b.board, name: name.name, score: b.score as number, achievements };
 }
 
 export function validatePlayer(body: unknown): PlayerRequest | ApiError {

@@ -2,7 +2,7 @@ import { midiToFrequency } from '@harmony/shared';
 import type { AudioOut, Instrument } from './instrument.ts';
 
 /** Synthesised sound; none of them needs files. */
-export type Timbre = 'soft' | 'guitar' | 'accordion';
+export type Timbre = 'soft' | 'guitar' | 'accordion' | 'organ' | 'strings' | 'flute';
 
 interface Partial {
   type: OscillatorType;
@@ -62,6 +62,44 @@ const VOICES: Record<Timbre, Voice> = {
     decay: 0.2,
     release: 0.12,
     cutoff: 5,
+  },
+  // Drawbar organ: flat, full sustain as long as the note is held.
+  organ: {
+    partials: [
+      { type: 'sine', ratio: 1, level: 0.14 },
+      { type: 'sine', ratio: 2, level: 0.1 },
+      { type: 'sine', ratio: 3, level: 0.05 },
+      { type: 'sine', ratio: 4, level: 0.03 },
+    ],
+    attack: 0.02,
+    sustain: 1,
+    decay: 0.05,
+    release: 0.1,
+  },
+  // Bowed strings: detuned saws, slow swell, soft filter, long release.
+  strings: {
+    partials: [
+      { type: 'sawtooth', ratio: 1, level: 0.07, detune: -9 },
+      { type: 'sawtooth', ratio: 1, level: 0.07 },
+      { type: 'sawtooth', ratio: 1, level: 0.07, detune: 9 },
+    ],
+    attack: 0.18,
+    sustain: 0.85,
+    decay: 0.4,
+    release: 0.4,
+    cutoff: 4,
+  },
+  // Flute: nearly pure tone with a little breath of the octave.
+  flute: {
+    partials: [
+      { type: 'sine', ratio: 1, level: 0.24 },
+      { type: 'sine', ratio: 2, level: 0.04 },
+      { type: 'triangle', ratio: 3, level: 0.01 },
+    ],
+    attack: 0.07,
+    sustain: 0.9,
+    decay: 0.15,
+    release: 0.15,
   },
 };
 

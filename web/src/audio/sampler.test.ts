@@ -13,7 +13,7 @@ describe('sampler', () => {
 
 describe('instrument registry', () => {
   it('offers synth, piano, harp, bagpipe, sampled and synthesised guitar and accordion', () => {
-    expect(INSTRUMENTS.map((i) => i.id)).toEqual(['synth', 'piano', 'harp', 'bagpipe', 'guitar', 'accordion', 'guitar-synth', 'accordion-synth']);
+    expect(INSTRUMENTS.map((i) => i.id)).toEqual(['synth', 'piano', 'harp', 'bagpipe', 'guitar', 'accordion', 'guitar-synth', 'accordion-synth', 'organ', 'strings', 'flute']);
   });
 
   it('falls back to the synth for unknown ids', () => {

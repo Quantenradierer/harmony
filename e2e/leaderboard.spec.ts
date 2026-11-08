@@ -30,7 +30,7 @@ test('boards: best score per lesson, a global total, and renaming', async ({ pag
   await answer20(page);
   await expect(page.getByTestId('run-status')).toContainText('Platz 1 in dieser Bestenliste');
   await expect(page.getByTestId('run-status')).toContainText('Gesamt: 285 Punkte, Platz 1');
-  await expect(page.getByTestId('lesson-board').locator('li')).toHaveText([/Ada\s*285/]);
+  await expect(page.getByTestId('lesson-board').locator('li')).toHaveText([/Ada[\s\S]*285/]);
 
   // The same lesson again does not add up; free practice is a board of its own.
   await page.locator('button.again').click();
@@ -41,7 +41,7 @@ test('boards: best score per lesson, a global total, and renaming', async ({ pag
   await expect(page.getByTestId('lesson-board').locator('li')).toHaveCount(1);
 
   await page.goto('/#/trophies');
-  await expect(page.getByTestId('global-board').locator('li')).toHaveText([/🥇\s*Ada\s*570/]);
+  await expect(page.getByTestId('global-board').locator('li')).toHaveText([/🥇\s*Ada[\s\S]*570/]);
 
   // Renaming in the settings changes the earlier entries too.
   await page.goto('/#/settings');
@@ -50,7 +50,7 @@ test('boards: best score per lesson, a global total, and renaming', async ({ pag
   await page.getByTestId('player-name').blur();
   await renamed;
   await page.goto('/#/lesson/notes-1');
-  await expect(page.getByTestId('lesson-board').locator('li')).toHaveText([/Countess\s*285/]);
+  await expect(page.getByTestId('lesson-board').locator('li')).toHaveText([/Countess[\s\S]*285/]);
 
   // "Train again" starts a fresh training.
   await page.goto('/#/lesson/notes-2');
