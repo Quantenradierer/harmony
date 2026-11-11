@@ -30,6 +30,8 @@ export interface QuizState {
 export interface QuizResult {
   question: Question;
   outcome: Outcome;
+  /** Answers picked, in order. */
+  picks: string[];
   points: number;
   /** Points of the running session after this question. */
   sessionPoints: number;
@@ -111,6 +113,7 @@ export class QuizController {
     this.deps.onResult?.({
       question: round.question,
       outcome: round.outcome,
+      picks: round.picks,
       points,
       sessionPoints: this.current.session.points,
     });

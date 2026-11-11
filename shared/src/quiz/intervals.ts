@@ -2,7 +2,7 @@ import { INTERVAL_IDS, semitones, type IntervalDirection, type IntervalId } from
 import { midiFromPitchClass } from '../music/pitch.ts';
 import { registerOctave } from '../music/register.ts';
 import { harmonic, melodic } from './playback.ts';
-import { pick, type GenerateOptions, type Question, type Rng } from './types.ts';
+import { pickCategory, type GenerateOptions, type Question, type Rng } from './types.ts';
 
 export interface IntervalsSpec {
   module: 'intervals';
@@ -18,7 +18,7 @@ export function generateIntervalQuestion(
   options: GenerateOptions = {},
 ): Question {
   const ids = INTERVAL_IDS.filter((id) => spec.intervals.includes(id));
-  const id = pick(ids, rng);
+  const id = pickCategory(ids, intervalCategory, rng, options.category);
   const root = midiFromPitchClass(Math.floor(rng() * 12), registerOctave(options.register ?? 'medium', rng));
   const top = root + semitones(id);
   const sound =

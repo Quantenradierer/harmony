@@ -1,6 +1,6 @@
 import { midiFromPitchClass, type PitchClass } from '../music/pitch.ts';
 import { registerOctave } from '../music/register.ts';
-import { pick, type GenerateOptions, type Question, type Rng } from './types.ts';
+import { pickCategory, type GenerateOptions, type Question, type Rng } from './types.ts';
 
 export interface NoteQuizSpec {
   pitchClasses: PitchClass[];
@@ -16,7 +16,7 @@ export function generateNoteQuestion(
   options: GenerateOptions = {},
 ): Question {
   const pcs = [...spec.pitchClasses].sort((a, b) => a - b);
-  const pc = pick(pcs, rng);
+  const pc = pickCategory(pcs, noteId, rng, options.category);
   const midi = midiFromPitchClass(pc, registerOctave(options.register ?? 'medium', rng));
   return {
     module: 'notes',

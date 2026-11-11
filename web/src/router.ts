@@ -8,6 +8,7 @@ export type Route =
   | { name: 'settings' }
   | { name: 'trophies' }
   | { name: 'daily' }
+  | { name: 'focus' }
   | { name: 'feedback' };
 
 const MODULES: ModuleId[] = ['notes', 'intervals', 'chords'];
@@ -18,7 +19,7 @@ export function parseRoute(hash: string): Route {
   if (name === 'practice' && MODULES.includes(arg as ModuleId)) {
     return { name: 'practice', module: arg as ModuleId };
   }
-  if (name === 'settings' || name === 'feedback' || name === 'trophies' || name === 'daily') return { name };
+  if (name === 'settings' || name === 'feedback' || name === 'trophies' || name === 'daily' || name === 'focus') return { name };
   return { name: 'home' };
 }
 

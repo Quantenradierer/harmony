@@ -20,6 +20,11 @@
   </em>
 </a>
 
+<a class="daily focus" href={href({ name: 'focus' })} data-testid="focus-link">
+  <strong>🎯 {$t('focus.title')}</strong>
+  <span>{$t('focus.teaser')}</span>
+</a>
+
 {#each MODULES.filter((m) => LESSONS[m].length > 0) as module (module)}
   <section class="module">
     <h2>{$t(`module.${module}`)}</h2>

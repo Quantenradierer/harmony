@@ -35,3 +35,16 @@ export function answerRound(round: Round, choice: string): Round {
   }
   return { ...round, picks };
 }
+
+/**
+ * Categories the learner took the played sound for by mistake. In a choice
+ * question every wrong pick; in a yes/no question a wrong "yes" means the
+ * sound was taken for the asked-about category (a wrong "no" names nothing).
+ */
+export function mistakenFor(question: Question, picks: string[]): string[] {
+  const wrong = picks.filter((p) => p !== question.answer);
+  if (question.prompt.kind === 'yesno') {
+    return wrong.includes('yes') ? [question.prompt.category] : [];
+  }
+  return wrong;
+}

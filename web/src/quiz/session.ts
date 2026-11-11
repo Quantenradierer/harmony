@@ -2,6 +2,7 @@ import { get, type Readable, type Writable } from 'svelte/store';
 import {
   dayKey,
   generateQuestion,
+  mistakenFor,
   recordAnswer,
   recordLessonResult,
   type Progress,
@@ -15,10 +16,12 @@ import type { Settings } from '../settings.ts';
 
 export interface SessionOptions {
   /** What to ask; with several specs each question picks one at random (mixed trainings). */
-  spec: QuizSpec | QuizSpec[];
+  spec?: QuizSpec | QuizSpec[];
   progress: Writable<Progress>;
   player: Player;
   settings: Readable<Settings>;
+  /** Chooses spec and category per question from the live progress (adaptive trainings); overrides `spec`. */
+  choose?: (progress: Progress, rng: Rng) => { spec: QuizSpec; category?: string };
   /** Set for lessons; free practice does not count towards gates. */
   lessonId?: string;
   rng?: Rng;
@@ -32,13 +35,17 @@ export interface SessionOptions {
 export function createSession(o: SessionOptions): QuizController {
   const rng = o.rng ?? Math.random;
   const now = o.now ?? (() => new Date());
-  const specs = Array.isArray(o.spec) ? o.spec : [o.spec];
+  const specs = o.spec === undefined ? [] : Array.isArray(o.spec) ? o.spec : [o.spec];
+  const choose =
+    o.choose ??
+    (() => ({ spec: specs[Math.min(specs.length - 1, Math.floor(rng() * specs.length))]!, category: undefined }));
   return new QuizController({
     nextQuestion: () => {
-      const spec = specs[Math.min(specs.length - 1, Math.floor(rng() * specs.length))]!;
+      const { spec, category } = choose(get(o.progress), rng);
       return generateQuestion(spec, rng, {
         register: get(o.settings).registers[spec.module],
         playback: get(o.settings).playback,
+        category,
       });
     },
     player: o.player,
@@ -47,9 +54,16 @@ export function createSession(o: SessionOptions): QuizController {
       get(o.settings).referencePitch
         ? { events: [{ midi: REFERENCE_MIDI, time: 0, duration: 1 }] }
         : undefined,
-    onResult: ({ question, outcome, points, sessionPoints }) =>
+    onResult: ({ question, outcome, picks, points, sessionPoints }) =>
       o.progress.update((p) => {
-        let next = recordAnswer(p, { category: question.category, outcome, points, sessionPoints, day: dayKey(now()) });
+        let next = recordAnswer(p, {
+          category: question.category,
+          outcome,
+          points,
+          sessionPoints,
+          day: dayKey(now()),
+          mistakenFor: mistakenFor(question, picks),
+        });
         if (o.lessonId) next = recordLessonResult(next, o.lessonId, outcome === 'first-try');
         return next;
       }),

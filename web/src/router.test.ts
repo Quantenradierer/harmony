@@ -15,6 +15,7 @@ describe('router', () => {
       { name: 'feedback' },
       { name: 'trophies' },
       { name: 'daily' },
+      { name: 'focus' },
     ] as const) {
       expect(parseRoute(href(r))).toEqual(r);
     }

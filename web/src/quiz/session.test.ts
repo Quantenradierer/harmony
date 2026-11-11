@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { get, writable } from 'svelte/store';
-import { emptyProgress, LESSONS, isUnlocked } from '@harmony/shared';
+import { emptyProgress, focusPlan, LESSONS, isUnlocked, pickFocus } from '@harmony/shared';
 import { createSession } from './session.ts';
 import { defaultSettings } from '../settings.ts';
 import { Player } from '../audio/player.ts';
@@ -60,5 +60,22 @@ describe('quiz session', () => {
     const quiz = createSession({ spec: [LESSONS.notes[0]!.spec, LESSONS.intervals[0]!.spec], progress, player, settings, rng });
     await quiz.next();
     expect(get(quiz.state).round!.question.category).toMatch(/^interval:/);
+  });
+
+  it('records what a wrongly answered sound was taken for', async () => {
+    const progress = writable(emptyProgress());
+    const quiz = createSession({ spec: LESSONS.notes[0]!.spec, progress, player, settings, rng: () => 0 });
+    await quiz.next();
+    quiz.answer('note:7'); // C was played (rng 0); G picked
+    expect(get(progress).confusions).toEqual({ 'note:0': { 'note:7': 1 } });
+  });
+
+  it('lets an adaptive chooser decide every question', async () => {
+    const progress = writable(emptyProgress());
+    const plan = focusPlan(emptyProgress());
+    const quiz = createSession({ choose: (p, rng) => pickFocus(plan, p, rng), progress, player, settings, rng: () => 0.99 });
+    await quiz.next();
+    const q = get(quiz.state).round!.question;
+    expect(q.category).toBe(plan.at(-1)!.categories.at(-1));
   });
 });

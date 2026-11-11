@@ -32,6 +32,8 @@ export interface Question {
 export interface GenerateOptions {
   register?: Register;
   playback?: Playback;
+  /** Ask this category if the spec offers it (choice questions); otherwise pick at random. */
+  category?: string;
 }
 
 /** Source of randomness in [0, 1); injectable for tests. */
@@ -40,4 +42,10 @@ export type Rng = () => number;
 export function pick<T>(items: readonly T[], rng: Rng): T {
   if (items.length === 0) throw new Error('pick from empty list');
   return items[Math.floor(rng() * items.length)]!;
+}
+
+/** The forced category if `items` offers it, otherwise a random pick. */
+export function pickCategory<T>(items: readonly T[], toCategory: (item: T) => string, rng: Rng, forced?: string): T {
+  const match = forced === undefined ? undefined : items.find((i) => toCategory(i) === forced);
+  return match ?? pick(items, rng);
 }

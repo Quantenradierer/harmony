@@ -17,6 +17,7 @@
     categories,
     stats,
     ranked = true,
+    finishedText,
   }: {
     quiz: QuizController;
     label: (id: string) => string;
@@ -24,6 +25,8 @@
     stats: Record<string, CategoryStats>;
     /** The score goes to a leaderboard; show where it landed. */
     ranked?: boolean;
+    /** Shown instead of the leaderboard status when the training is not ranked. */
+    finishedText?: string;
   } = $props();
   const quizState = $derived(quiz.state);
   const round = $derived($quizState.round);
@@ -83,7 +86,7 @@
         <p class="points">{$t('result.score')}: <strong data-testid="run-score">{$quizState.session.points}</strong></p>
         <p data-testid="run-status">
           {#if !ranked}
-            {$t('daily.finished')}
+            {finishedText ?? $t('daily.finished')}
           {:else if $runResult?.status === 'sent'}
             {$t('result.rank', { rank: $runResult.rank })}
             {$t('result.total', { total: $runResult.total, totalRank: $runResult.totalRank })}

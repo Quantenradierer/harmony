@@ -8,6 +8,7 @@
   import TrophiesScreen from './screens/TrophiesScreen.svelte';
   import FeedbackScreen from './screens/FeedbackScreen.svelte';
   import DailyScreen from './screens/DailyScreen.svelte';
+  import FocusScreen from './screens/FocusScreen.svelte';
   import { settings } from './stores.ts';
   import { THEME_COLORS } from './settings.ts';
   import { isReminderDue, dayKey } from './reminder.ts';
@@ -76,6 +77,8 @@
   <TrophiesScreen />
 {:else if $route.name === 'daily'}
   <DailyScreen />
+{:else if $route.name === 'focus'}
+  <FocusScreen />
 {:else if $route.name === 'feedback'}
   <FeedbackScreen />
 {:else}

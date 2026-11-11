@@ -2,7 +2,7 @@ import { CHORD_IDS, chordNotes, type ChordId } from '../music/chords.ts';
 import { midiFromPitchClass } from '../music/pitch.ts';
 import { registerOctave } from '../music/register.ts';
 import { harmonic } from './playback.ts';
-import { pick, type GenerateOptions, type Question, type Rng } from './types.ts';
+import { pick, pickCategory, type GenerateOptions, type Question, type Rng } from './types.ts';
 
 export interface ChordsSpec {
   module: 'chords';
@@ -29,7 +29,7 @@ export function generateChordQuestion(spec: ChordsSpec, rng: Rng, options: Gener
     // Half the time the target, otherwise one of the others.
     id = rng() < 0.5 || others.length === 0 ? target : pick(others, rng);
   } else {
-    id = pick(ids, rng);
+    id = pickCategory(ids, chordCategory, rng, options.category);
   }
   const inversion = pick(spec.inversions ?? [0], rng);
   const root = midiFromPitchClass(Math.floor(rng() * 12), registerOctave(options.register ?? 'medium', rng));

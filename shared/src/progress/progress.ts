@@ -21,6 +21,8 @@ export interface Progress {
   days?: Record<string, DayStats>;
   /** Days (YYYY-MM-DD) whose daily challenge was finished, ascending. */
   dailyDone?: string[];
+  /** How often a played category was mistaken for another: played → picked → count. */
+  confusions?: Record<string, Record<string, number>>;
 }
 
 export function emptyProgress(): Progress {
@@ -35,6 +37,8 @@ export interface AnswerRecord {
   sessionPoints?: number;
   /** Local calendar day of the answer (YYYY-MM-DD); counted in `days` when set. */
   day?: string;
+  /** Categories the learner wrongly took the sound for (see `mistakenFor`). */
+  mistakenFor?: string[];
 }
 
 export function recordAnswer(progress: Progress, answer: AnswerRecord): Progress {
@@ -48,9 +52,15 @@ export function recordAnswer(progress: Progress, answer: AnswerRecord): Progress
       [answer.day]: { answers: d.answers + 1, correct: d.correct + (firstTry ? 1 : 0), points: d.points + answer.points },
     };
   }
+  let confusions = progress.confusions;
+  for (const picked of answer.mistakenFor ?? []) {
+    const row = confusions?.[answer.category] ?? {};
+    confusions = { ...confusions, [answer.category]: { ...row, [picked]: (row[picked] ?? 0) + 1 } };
+  }
   return {
     ...progress,
     ...(days ? { days } : {}),
+    ...(confusions ? { confusions } : {}),
     totalPoints: progress.totalPoints + answer.points,
     bestSession: Math.max(progress.bestSession ?? 0, answer.sessionPoints ?? 0),
     categories: {
