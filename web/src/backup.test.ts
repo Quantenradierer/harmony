@@ -79,6 +79,8 @@ describe('progress backup', () => {
       { ...file, progress: { ...file.progress, days: { yesterday: { answers: 1, correct: 0, points: 0 } } } },
       { ...file, progress: { ...file.progress, days: { '2026-11-05': { answers: 1.5, correct: 0, points: 0 } } } },
       { ...file, progress: { ...file.progress, dailyDone: ['soon'] } },
+      { ...file, progress: { ...file.progress, categoryDays: { 'note:0': { today: { attempts: 1, correct: 1 } } } } },
+      { ...file, progress: { ...file.progress, categoryDays: { 'note:0': { '2026-11-05': { attempts: 1 } } } } },
     ];
     for (const b of broken) expect(parseBackup(JSON.stringify(b))).toEqual({ ok: false, error: 'invalid' });
   });

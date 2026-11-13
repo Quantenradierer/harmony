@@ -26,6 +26,13 @@ test('finishing the daily challenge marks the day and shows on the progress char
 
   await page.goto('/#/trophies');
   await expect(page.getByTestId('chart-readout')).toHaveText(/20 Antworten, 100 % im ersten Versuch/);
+  const notes = page.locator('[data-testid="trend-group"][data-module="notes"]');
+  const trendC = notes.locator('[data-testid="trend"][data-category="note:0"]');
+  await expect(trendC).toBeHidden();
+  await notes.locator('summary').click();
+  await expect(trendC).toBeVisible();
+  await expect(trendC).toContainText('100 %');
+  await expect(trendC.locator('svg')).toHaveAttribute('aria-label', /1 Übungstage, von 100 %/);
   for (const id of ['first-answer', 'first-gold', 'session-200', 'session-250', 'perfect-day', 'first-daily']) {
     await expect(page.locator(`[data-testid="achievement"][data-id="${id}"]`)).toHaveAttribute('data-earned', 'true');
   }

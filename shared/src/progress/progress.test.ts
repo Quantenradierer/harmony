@@ -1,5 +1,22 @@
 import { describe, expect, it } from 'vitest';
-import { accuracy, emptyProgress, recordAnswer } from './progress.ts';
+import { accuracy, categoryTrend, emptyProgress, recordAnswer } from './progress.ts';
+
+describe('category trend', () => {
+  it('counts answers per category and day and lists the active days oldest first', () => {
+    let p = emptyProgress();
+    p = recordAnswer(p, { category: 'note:0', outcome: 'wrong', points: 0, day: '2026-11-12' });
+    p = recordAnswer(p, { category: 'note:0', outcome: 'first-try', points: 10, day: '2026-11-10' });
+    p = recordAnswer(p, { category: 'note:0', outcome: 'first-try', points: 10, day: '2026-11-12' });
+    p = recordAnswer(p, { category: 'note:2', outcome: 'first-try', points: 10, day: '2026-11-12' });
+    p = recordAnswer(p, { category: 'note:0', outcome: 'first-try', points: 10 });
+    expect(categoryTrend(p, 'note:0')).toEqual([
+      { day: '2026-11-10', attempts: 1, correct: 1 },
+      { day: '2026-11-12', attempts: 2, correct: 1 },
+    ]);
+    expect(categoryTrend(p, 'note:0', 1)).toEqual([{ day: '2026-11-12', attempts: 2, correct: 1 }]);
+    expect(categoryTrend(p, 'note:4')).toEqual([]);
+  });
+});
 
 describe('progress', () => {
   it('adds points to the all-time total', () => {

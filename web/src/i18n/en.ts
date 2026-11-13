@@ -133,6 +133,11 @@ export const en = {
   'chart.points': 'Points',
   'chart.answers': 'Answers',
   'chart.accuracy': 'First try',
+  'trends.title': 'Progress per note, interval and chord',
+  'trends.hint': 'Share right on the first try, on each day you practised. Tap a group to open it.',
+  'trends.empty': 'Soon you will see here how you improve at each note, interval and chord.',
+  'trends.answers': '{n} answers',
+  'trends.summary': '{name}: {days} practice days, from {from} on {fromDate} to {to} on {toDate}',
 
   'module.notes': 'Notes',
   'module.intervals': 'Intervals',

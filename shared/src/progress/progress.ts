@@ -23,6 +23,8 @@ export interface Progress {
   dailyDone?: string[];
   /** How often a played category was mistaken for another: played → picked → count. */
   confusions?: Record<string, Record<string, number>>;
+  /** Answers and first-try answers per category and local calendar day: category → day → stats. */
+  categoryDays?: Record<string, Record<string, CategoryStats>>;
 }
 
 export function emptyProgress(): Progress {
@@ -52,6 +54,15 @@ export function recordAnswer(progress: Progress, answer: AnswerRecord): Progress
       [answer.day]: { answers: d.answers + 1, correct: d.correct + (firstTry ? 1 : 0), points: d.points + answer.points },
     };
   }
+  let categoryDays = progress.categoryDays;
+  if (answer.day) {
+    const row = categoryDays?.[answer.category] ?? {};
+    const d = row[answer.day] ?? { attempts: 0, correct: 0 };
+    categoryDays = {
+      ...categoryDays,
+      [answer.category]: { ...row, [answer.day]: { attempts: d.attempts + 1, correct: d.correct + (firstTry ? 1 : 0) } },
+    };
+  }
   let confusions = progress.confusions;
   for (const picked of answer.mistakenFor ?? []) {
     const row = confusions?.[answer.category] ?? {};
@@ -61,6 +72,7 @@ export function recordAnswer(progress: Progress, answer: AnswerRecord): Progress
     ...progress,
     ...(days ? { days } : {}),
     ...(confusions ? { confusions } : {}),
+    ...(categoryDays ? { categoryDays } : {}),
     totalPoints: progress.totalPoints + answer.points,
     bestSession: Math.max(progress.bestSession ?? 0, answer.sessionPoints ?? 0),
     categories: {
@@ -77,4 +89,18 @@ export function recordAnswer(progress: Progress, answer: AnswerRecord): Progress
 export function accuracy(stats: CategoryStats | undefined): number | undefined {
   if (!stats || stats.attempts === 0) return undefined;
   return stats.correct / stats.attempts;
+}
+
+/** One active day of a category: that day's answers and first-try answers. */
+export interface TrendPoint extends CategoryStats {
+  day: string;
+}
+
+/** Days on which `category` was practised, oldest first, keeping at most the last `limit`. */
+export function categoryTrend(progress: Progress, category: string, limit = 30): TrendPoint[] {
+  return Object.entries(progress.categoryDays?.[category] ?? {})
+    .filter(([, s]) => s.attempts > 0)
+    .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
+    .slice(-limit)
+    .map(([day, s]) => ({ day, ...s }));
 }

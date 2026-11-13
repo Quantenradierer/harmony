@@ -134,6 +134,11 @@ export const de: Messages = {
   'chart.points': 'Punkte',
   'chart.answers': 'Antworten',
   'chart.accuracy': 'Erster Versuch',
+  'trends.title': 'Verlauf je Ton, Intervall und Akkord',
+  'trends.hint': 'Anteil im ersten Versuch richtig, an jedem Tag, an dem du geübt hast. Tippe eine Gruppe an, um sie aufzuklappen.',
+  'trends.empty': 'Hier siehst du bald, wie du dich bei jedem Ton, Intervall und Akkord verbesserst.',
+  'trends.answers': '{n} Antworten',
+  'trends.summary': '{name}: {days} Übungstage, von {from} am {fromDate} auf {to} am {toDate}',
 
   'module.notes': 'Töne',
   'module.intervals': 'Intervalle',

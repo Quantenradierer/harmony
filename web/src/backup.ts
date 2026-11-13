@@ -49,7 +49,14 @@ function validProgress(p: unknown): p is Progress {
     (p.dailyDone === undefined || (Array.isArray(p.dailyDone) && p.dailyDone.every((d) => typeof d === 'string' && DAY.test(d)))) &&
     (p.confusions === undefined ||
       (isObject(p.confusions) &&
-        Object.values(p.confusions).every((row) => isObject(row) && Object.values(row).every(isCount))))
+        Object.values(p.confusions).every((row) => isObject(row) && Object.values(row).every(isCount)))) &&
+    (p.categoryDays === undefined ||
+      (isObject(p.categoryDays) &&
+        Object.values(p.categoryDays).every(
+          (row) =>
+            isObject(row) &&
+            Object.entries(row).every(([day, c]) => DAY.test(day) && isObject(c) && isCount(c.attempts) && isCount(c.correct)),
+        )))
   );
 }
 

@@ -21,6 +21,7 @@
   import { href } from '../router.ts';
   import Leaderboard from '../components/Leaderboard.svelte';
   import ProgressChart from '../components/ProgressChart.svelte';
+  import CategoryTrends from '../components/CategoryTrends.svelte';
 
   const MODULES: ModuleId[] = ['notes', 'intervals', 'chords'];
   const ICON: Record<Medal, string> = { gold: '🥇', silver: '🥈', bronze: '🥉' };
@@ -61,6 +62,8 @@
 </section>
 
 <ProgressChart />
+
+<CategoryTrends />
 
 <section>
   <h3>{$t('achievements.title')}</h3>
